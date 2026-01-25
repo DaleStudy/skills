@@ -29,6 +29,7 @@ jobs:
         skill:
           - bun
           - github-actions
+          - skill-creator
 
     steps:
       - name: Create Claude Code config directory

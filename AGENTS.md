@@ -36,11 +36,16 @@ allowed-tools: Bash(command:*) # 허용할 도구 패턴
 
 ## Adding New Skills
 
-1. `skills/{skill-name}/` 디렉토리 생성
-2. `SKILL.md` 작성 (frontmatter + 지시사항)
-3. README.md의 스킬 목록에 추가
+새 스킬 추가 요청 시 **skill-creator 스킬 사용을 권장**한다.
+
+```
+/skill-creator
+```
+
+또는 "새 스킬 만들어줘"라고 요청하면 자동 활성화된다.
 
 ## Current Skills
 
 - **bun**: Node.js 대신 Bun 런타임 사용
 - **github-actions**: GitHub Actions 워크플로우 작성 및 보안
+- **skill-creator**: 새 스킬 생성 가이드

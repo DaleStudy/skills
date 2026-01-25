@@ -1,6 +1,6 @@
 # Skills
 
-DaleStudy 커뮤니티 에이전트 스킬 모음
+달레 스터디 커뮤니티 에이전트 스킬 모음
 
 ## 설치
 
@@ -54,13 +54,25 @@ GitHub Actions 워크플로우 생성, 보안 및 버전 관리
 npx skills add DaleStudy/skills --skill github-actions
 ```
 
+### [skill-creator](skills/skill-creator)
+
+DaleStudy 저장소에 새 스킬 생성 가이드
+
+- SKILL.md 형식 및 frontmatter 규칙
+- 스킬 생성 절차
+- 검증 방법
+
+```bash
+npx skills add DaleStudy/skills --skill skill-creator
+```
+
 ## 사용법
 
-| 도구 | 활성화 방식 |
-|------|-------------|
-| Claude Code | 자동 (키워드 감지) 또는 슬래시 명령어 |
-| Cursor | 파일 패턴 매칭 |
-| GitHub Copilot | `@workspace` 멘션 |
+| 도구           | 활성화 방식                           |
+| -------------- | ------------------------------------- |
+| Claude Code    | 자동 (키워드 감지) 또는 슬래시 명령어 |
+| Cursor         | 파일 패턴 매칭                        |
+| GitHub Copilot | `@workspace` 멘션                     |
 
 ## 스킬 구조
 
@@ -74,4 +86,8 @@ skill-name/
 
 ## 기여
 
-새 스킬 추가 시 [Agent Skills 스펙](https://agentskills.io/specification)을 따라주세요.
+새 스킬 추가 시 [skill-creator](skills/skill-creator) 가이드를 참고하세요. ([Agent Skills 스펙](https://agentskills.io/specification) 기반)
+
+```bash
+npx add-skill DaleStudy/skills --skill skill-creator
+```
