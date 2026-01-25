@@ -1,0 +1,67 @@
+name: Validate Skills Installation
+
+on:
+  schedule:
+    # 매일 11:00 UTC (KST 20:00, ET 06:00)
+    - cron: "0 11 * * *"
+    # 매일 23:00 UTC (KST 08:00+1, ET 18:00)
+    - cron: "0 23 * * *"
+  workflow_dispatch: # 수동 실행 지원
+  push:
+    branches: [main]
+    paths:
+      - "skills/*/SKILL.md"
+  pull_request:
+    branches: [main]
+    paths:
+      - "skills/*/SKILL.md"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 10
+
+    strategy:
+      fail-fast: false
+      matrix:
+        skill:
+          - bun
+          - github-actions
+
+    steps:
+      - name: Create Claude Code config directory
+        run: mkdir -p ~/.claude
+
+      - name: Validate ${{ matrix.skill }} installation
+        run: |
+          npx add-skill DaleStudy/skills \
+            --skill ${{ matrix.skill }} \
+            --agent claude-code \
+            --global \
+            --yes
+          echo "✅ Successfully installed skill: ${{ matrix.skill }}"
+
+      - name: Verify skill files
+        run: |
+          echo "📁 Checking installed skill files..."
+
+          # Claude Code 스킬 디렉토리 확인
+          if [ -d "$HOME/.claude" ]; then
+            echo "Contents of ~/.claude:"
+            find ~/.claude -type f -name "*.md" | head -20
+          fi
+
+          # SKILL.md 파일 존재 확인
+          SKILL_FILE=$(find ~/.claude -type f -name "SKILL.md" 2>/dev/null | grep -i "${{ matrix.skill }}" | head -1)
+          if [ -n "$SKILL_FILE" ]; then
+            echo "✅ Found skill file: $SKILL_FILE"
+            echo "--- Content preview ---"
+            head -20 "$SKILL_FILE"
+          else
+            echo "❌ Skill file not found for: ${{ matrix.skill }}"
+            echo "Searching in ~/.claude for any files:"
+            find ~/.claude -type f 2>/dev/null || echo "No files found"
+            exit 1
+          fi
