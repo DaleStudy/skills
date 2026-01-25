@@ -47,21 +47,25 @@ jobs:
         run: |
           echo "📁 Checking installed skill files..."
 
-          # Claude Code 스킬 디렉토리 확인
-          if [ -d "$HOME/.claude" ]; then
-            echo "Contents of ~/.claude:"
-            find ~/.claude -type f -name "*.md" | head -20
-          fi
+          # add-skill은 ~/.agents/skills/에 설치하고 각 에이전트로 symlink 생성
+          SKILL_DIR="$HOME/.agents/skills/${{ matrix.skill }}"
 
-          # SKILL.md 파일 존재 확인
-          SKILL_FILE=$(find ~/.claude -type f -name "SKILL.md" 2>/dev/null | grep -i "${{ matrix.skill }}" | head -1)
-          if [ -n "$SKILL_FILE" ]; then
-            echo "✅ Found skill file: $SKILL_FILE"
-            echo "--- Content preview ---"
-            head -20 "$SKILL_FILE"
+          if [ -d "$SKILL_DIR" ]; then
+            echo "✅ Skill directory exists: $SKILL_DIR"
+            ls -la "$SKILL_DIR"
+
+            if [ -f "$SKILL_DIR/SKILL.md" ]; then
+              echo "✅ Found SKILL.md"
+              echo "--- Content preview ---"
+              head -20 "$SKILL_DIR/SKILL.md"
+            else
+              echo "❌ SKILL.md not found in $SKILL_DIR"
+              exit 1
+            fi
           else
-            echo "❌ Skill file not found for: ${{ matrix.skill }}"
-            echo "Searching in ~/.claude for any files:"
-            find ~/.claude -type f 2>/dev/null || echo "No files found"
+            echo "❌ Skill directory not found: $SKILL_DIR"
+            echo "Searching for installed skills:"
+            find ~/.agents -type d 2>/dev/null || echo "~/.agents not found"
+            find ~/.claude -type l 2>/dev/null || echo "No symlinks in ~/.claude"
             exit 1
           fi
