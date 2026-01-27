@@ -23,6 +23,7 @@ jobs:
           - github-actions
           - skill-creator
           - storybook
+          - testing
 
     steps:
       - name: Create Claude Code config directory

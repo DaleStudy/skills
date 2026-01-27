@@ -94,6 +94,30 @@ npx skills add dalestudy/skills --skill storybook
 
 ---
 
+### [testing](skills/testing)
+
+React Testing Library 및 Vitest 기반 테스팅 모범 관례
+
+**주요 기능:**
+
+- 올바른 쿼리 우선순위 (getByRole > getByLabelText > getByText...)
+- userEvent 사용 패턴 (fireEvent 지양)
+- 비동기 처리 (waitFor, findBy)
+- 안티패턴 회피 (구현 세부사항 테스트 금지)
+- Vitest + MSW 설정 템플릿
+
+**언제 활성화되나요?**
+
+- `.test.tsx`, `.test.ts`, `.spec.tsx`, `.spec.ts` 파일 작업 시
+- "테스트 작성해줘", "컴포넌트 테스트" 같은 요청 시
+- `test`, `testing`, `vitest`, `RTL`, `getByRole`, `userEvent` 키워드 포함 작업 시
+
+```bash
+npx skills add dalestudy/skills --skill testing
+```
+
+---
+
 ### [skill-creator](skills/skill-creator)
 
 새 스킬 생성 및 관리 가이드
