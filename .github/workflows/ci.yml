@@ -12,7 +12,7 @@ on:
     branches: [main]
 
 jobs:
-  validate:
+  test:
     runs-on: ubuntu-latest
 
     strategy:
@@ -23,14 +23,18 @@ jobs:
           - github-actions
           - skill-creator
           - storybook
+          - testing
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
       - name: Create Claude Code config directory
         run: mkdir -p ~/.claude
 
-      - name: Validate ${{ matrix.skill }} installation
+      - name: Validate ${{ matrix.skill }} installation (local)
         run: |
-          npx skills add DaleStudy/skills --skill ${{ matrix.skill }} --agent claude-code --global --yes
+          npx skills add . --skill ${{ matrix.skill }} --agent claude-code --global --yes
           echo "✅ Successfully installed skill: ${{ matrix.skill }}"
 
       - name: Verify skill files
@@ -57,5 +61,51 @@ jobs:
             echo "Searching for installed skills:"
             find ~/.agents -type d 2>/dev/null || echo "~/.agents not found"
             find ~/.claude -type l 2>/dev/null || echo "No symlinks in ~/.claude"
+            exit 1
+          fi
+
+  test-remote:
+    runs-on: ubuntu-latest
+    # main 브랜치에 merge된 후에만 실행
+    if: github.ref == 'refs/heads/main'
+
+    strategy:
+      fail-fast: false
+      matrix:
+        skill:
+          - bun
+          - github-actions
+          - skill-creator
+          - storybook
+          - testing
+
+    steps:
+      - name: Create Claude Code config directory
+        run: mkdir -p ~/.claude
+
+      - name: Validate ${{ matrix.skill }} installation (remote)
+        run: |
+          npx skills add DaleStudy/skills --skill ${{ matrix.skill }} --agent claude-code --global --yes
+          echo "✅ Successfully installed skill from GitHub: ${{ matrix.skill }}"
+
+      - name: Verify skill files
+        run: |
+          echo "📁 Checking installed skill files..."
+          SKILL_DIR="$HOME/.agents/skills/${{ matrix.skill }}"
+
+          if [ -d "$SKILL_DIR" ]; then
+            echo "✅ Skill directory exists: $SKILL_DIR"
+            ls -la "$SKILL_DIR"
+
+            if [ -f "$SKILL_DIR/SKILL.md" ]; then
+              echo "✅ Found SKILL.md"
+              echo "--- Content preview ---"
+              head -20 "$SKILL_DIR/SKILL.md"
+            else
+              echo "❌ SKILL.md not found in $SKILL_DIR"
+              exit 1
+            fi
+          else
+            echo "❌ Skill directory not found: $SKILL_DIR"
             exit 1
           fi
