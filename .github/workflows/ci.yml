@@ -30,14 +30,14 @@ jobs:
 
       - name: Validate ${{ matrix.skill }} installation
         run: |
-          npx add-skill DaleStudy/skills --skill ${{ matrix.skill }} --agent claude-code --global --yes
+          npx skills add DaleStudy/skills --skill ${{ matrix.skill }} --agent claude-code --global --yes
           echo "✅ Successfully installed skill: ${{ matrix.skill }}"
 
       - name: Verify skill files
         run: |
           echo "📁 Checking installed skill files..."
 
-          # add-skill은 ~/.agents/skills/에 설치하고 각 에이전트로 symlink 생성
+          # skills CLI는 ~/.agents/skills/에 설치하고 각 에이전트로 symlink 생성
           SKILL_DIR="$HOME/.agents/skills/${{ matrix.skill }}"
 
           if [ -d "$SKILL_DIR" ]; then

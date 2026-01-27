@@ -91,7 +91,7 @@ description: "Bun 관련 스킬"  # 트리거 조건 없음
 
 ### 4. 워크플로우 매트릭스 업데이트
 
-`.github/workflows/validate-skills.yml`의 matrix에 새 스킬 추가:
+`.github/workflows/ci.yml`의 matrix에 새 스킬 추가:
 
 ```yaml
 matrix:
@@ -103,10 +103,12 @@ matrix:
 
 ## 기존 스킬 참고
 
-| 스킬             | 특징                               |
-| ---------------- | ---------------------------------- |
-| `bun`            | 명령어 매핑 테이블, 코드 예제 중심 |
-| `github-actions` | 보안 모범 사례, YAML 예제 중심     |
+| 스킬             | 특징                                           |
+| ---------------- | ---------------------------------------------- |
+| `bun`            | 명령어 매핑 테이블, 코드 예제 중심             |
+| `github-actions` | 보안 모범 사례, YAML 예제 중심                 |
+| `skill-creator`  | 메타 스킬, 구조화된 절차, frontmatter 가이드   |
+| `storybook`      | CSF 3.0 베스트 프랙티스, TypeScript 타입 예제  |
 
 새 스킬 작성 시 기존 스킬의 스타일을 참고하여 일관성 유지.
 
@@ -115,5 +117,5 @@ matrix:
 스킬 설치 테스트:
 
 ```bash
-npx add-skill DaleStudy/skills --skill {skill-name} --agent claude-code --global --yes
+npx skills add DaleStudy/skills --skill {skill-name} --agent claude-code --global --yes
 ```
