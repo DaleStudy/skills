@@ -1,93 +1,173 @@
-# Skills
+# DaleStudy Skills
 
-달레 스터디 커뮤니티 에이전트 스킬 모음
+달레 스터디의 에이전트 스킬 모음입니다.
 
-## 설치
+다양한 프로젝트를 진행하면서 자주 쓰는 지식, 반복되는 체크리스트, 노하우, 모범 관행, 안티 패턴 같은 것들이 자연스럽게 지식 자산으로 쌓입니다. 이제 이런 공동 지식을 AI 에이전트도 활용할 수 있도록 [Agent Skills](https://agentskills.io/specification) 형식으로 체계화했습니다.
+
+## 빠른 시작
+
+### 전체 스킬 설치
 
 ```bash
-npx skills add DaleStudy/skills
+npx skills add dalestudy/skills
 ```
 
-### Claude Code
+또는 Bun 사용 시:
 
 ```bash
-claude skill add DaleStudy/skills
+bunx skills add dalestudy/skills
 ```
 
-### 수동 설치
-
-스킬 디렉토리를 복사:
+### 특정 스킬만 설치
 
 ```bash
-# 프로젝트 로컬
-cp -r skills/bun .claude/skills/
-
-# 전역 (모든 프로젝트)
-cp -r skills/bun ~/.claude/skills/
+npx skills add dalestudy/skills --skill bun
 ```
 
 ## 스킬 목록
 
 ### [bun](skills/bun)
 
-Node.js 대신 Bun 런타임 사용
+Node.js 대신 Bun 런타임 사용을 위한 가이드
+
+**주요 기능:**
 
 - npm/yarn → bun 명령어 매핑
 - 프로젝트 초기화 및 패키지 관리
 - GitHub Actions CI 설정
 - Node.js 마이그레이션 체크리스트
 
+**언제 활성화되나요?**
+
+- `package.json`에서 bun 관련 작업 시
+- "bun으로 프로젝트 시작해줘" 같은 요청 시
+
 ```bash
-npx skills add DaleStudy/skills --skill bun
+npx skills add dalestudy/skills --skill bun
 ```
+
+---
 
 ### [github-actions](skills/github-actions)
 
-GitHub Actions 워크플로우 생성, 보안 및 버전 관리
+GitHub Actions 워크플로우 작성 시 보안과 최신 버전 관리
 
-- 최신 액션 버전 확인 방법
+**주요 기능:**
+
+- 최신 액션 버전 자동 확인 (`gh api` 활용)
 - 최소 권한 원칙 및 시크릿 관리
-- 입력값 인젝션 방지
-- pull_request_target 보안
+- 입력값 인젝션 방지 패턴
+- `pull_request_target` 보안 가이드
+
+**언제 활성화되나요?**
+
+- `.github/workflows/` 파일 작업 시
+- "CI 워크플로우 만들어줘" 같은 요청 시
+- `uses:`, `actions/` 키워드 포함 작업 시
 
 ```bash
-npx skills add DaleStudy/skills --skill github-actions
+npx skills add dalestudy/skills --skill github-actions
 ```
+
+---
+
+### [storybook](skills/storybook)
+
+Storybook 스토리 작성 및 CSF 3.0 베스트 프랙티스
+
+**주요 기능:**
+
+- CSF 3.0 형식과 타입 안전한 패턴
+- Args 기반 스토리 작성 및 재사용
+- Decorators로 컨텍스트 제공 (Theme, Router, Provider 등)
+- Parameters와 ArgTypes 세밀한 제어
+
+**언제 활성화되나요?**
+
+- `.stories.tsx`, `.stories.ts` 파일 작업 시
+- "Button 컴포넌트 스토리 만들어줘" 같은 요청 시
+- `storybook`, `CSF` 키워드 포함 작업 시
+
+```bash
+npx skills add dalestudy/skills --skill storybook
+```
+
+---
 
 ### [skill-creator](skills/skill-creator)
 
-DaleStudy 저장소에 새 스킬 생성 가이드
+새 스킬 생성 및 관리 가이드
+
+**주요 기능:**
 
 - SKILL.md 형식 및 frontmatter 규칙
-- 스킬 생성 절차
-- 검증 방법
+- 스킬 생성 6단계 프로세스
+- 자동 검증 및 패키징
+
+**언제 활성화되나요?**
+
+- "새 스킬 만들어줘" 요청 시
+- `/skill-creator` 명령어 사용 시
+- SKILL.md 작성 또는 수정 시
 
 ```bash
-npx skills add DaleStudy/skills --skill skill-creator
+npx skills add dalestudy/skills --skill skill-creator
 ```
 
 ## 사용법
 
-| 도구           | 활성화 방식                           |
-| -------------- | ------------------------------------- |
-| Claude Code    | 자동 (키워드 감지) 또는 슬래시 명령어 |
-| Cursor         | 파일 패턴 매칭                        |
-| GitHub Copilot | `@workspace` 멘션                     |
+설치 후 각 AI 도구에서 자동으로 활성화됩니다:
+
+| 도구           | 활성화 방식                           | 예시                                    |
+| -------------- | ------------------------------------- | --------------------------------------- |
+| Claude Code    | 자동 (키워드 감지) 또는 슬래시 명령어 | "GitHub Actions 워크플로우 만들어줘"    |
+| Cursor         | 파일 패턴 매칭                        | `.stories.tsx` 파일 열면 자동 활성화    |
+| GitHub Copilot | `@workspace` 멘션                     | `@workspace Storybook 스토리 작성 방법` |
 
 ## 스킬 구조
 
+각 스킬은 [Agent Skills 스펙](https://agentskills.io/specification)을 따릅니다:
+
 ```
 skill-name/
-├── SKILL.md      # 에이전트 지시사항 (필수)
-├── references/   # 참조 문서 (선택)
-├── scripts/      # 실행 스크립트 (선택)
-└── assets/       # 템플릿, 이미지 등 (선택)
+├── SKILL.md          # 필수: YAML frontmatter + 마크다운 지시사항
+├── scripts/          # 선택: 실행 가능한 스크립트
+├── references/       # 선택: 참조 문서
+└── assets/           # 선택: 템플릿, 이미지 등
 ```
 
-## 기여
+## 기여하기
 
-새 스킬 추가 시 [skill-creator](skills/skill-creator) 가이드를 참고하세요. ([Agent Skills 스펙](https://agentskills.io/specification) 기반)
+새 스킬을 추가하거나 기존 스킬을 개선하고 싶으시다면:
+
+1. **skill-creator 스킬 설치**
 
 ```bash
-npx add-skill DaleStudy/skills --skill skill-creator
+npx skills add dalestudy/skills --skill skill-creator
 ```
+
+2. **새 스킬 초기화**
+
+```bash
+npx skills init <스킬명>
+```
+
+또는 Claude Code에서:
+
+```
+/skill-creator
+```
+
+3. **스킬 개발 및 테스트**
+
+skill-creator 가이드를 따라 SKILL.md 작성 및 리소스 추가
+
+4. **Pull Request 제출**
+
+변경사항을 커밋하고 PR을 보내주세요!
+
+## 관련 링크
+
+- [Agent Skills 스펙](https://agentskills.io/specification)
+- [Vercel Agent Skills](https://github.com/vercel-labs/agent-skills)
+- [DaleStudy 커뮤니티](https://github.com/DaleStudy)
