@@ -121,6 +121,7 @@ npx skills add dalestudy/skills --skill bun
 - **skill-creator**: 새 스킬 생성 가이드
 - **storybook**: Storybook CSF 3.0 스토리 작성
 - **testing**: React Testing Library 및 Vitest 테스팅 모범 관례
+- **typescript**: TypeScript 타입 정의 및 모범 관례
 
 ## Important Notes
 
