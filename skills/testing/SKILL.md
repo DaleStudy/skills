@@ -4,7 +4,7 @@ description: "React Testing Library 및 Vitest 기반 테스팅 모범 관례. �
 license: MIT
 metadata:
   author: DaleStudy
-  version: "1.0"
+  version: "1.0.1"
 ---
 
 # Testing Library
@@ -58,6 +58,7 @@ test('사용자가 폼을 제출할 수 있다', async () => {
 ```
 
 **핵심**:
+
 - `userEvent.setup()` 호출 후 사용
 - 모든 user 메서드는 `await` 필수
 - 실제 브라우저 이벤트 순서 재현 (focus, keydown, keyup 등)
@@ -67,11 +68,11 @@ test('사용자가 폼을 제출할 수 있다', async () => {
 ```typescript
 // ❌ 나쁜 예 - fireEvent 사용
 fireEvent.click(button);
-fireEvent.change(input, { target: { value: 'text' } });
+fireEvent.change(input, { target: { value: "text" } });
 
 // ✅ 좋은 예 - userEvent 사용
 await user.click(button);
-await user.type(input, 'text');
+await user.type(input, "text");
 ```
 
 **상세 가이드**: [references/user-events.md](references/user-events.md)
@@ -93,7 +94,7 @@ expect(successMessage).toBeInTheDocument();
 ```typescript
 // 복잡한 비동기 검증
 await waitFor(() => {
-  expect(screen.getByRole('alert')).toHaveTextContent('성공');
+  expect(screen.getByRole("alert")).toHaveTextContent("성공");
 });
 
 // 여러 조건 검증
@@ -107,7 +108,7 @@ await waitFor(() => {
 
 ```typescript
 // ❌ 나쁜 예 - 임의의 timeout
-await new Promise(resolve => setTimeout(resolve, 1000));
+await new Promise((resolve) => setTimeout(resolve, 1000));
 
 // ❌ 나쁜 예 - act() 수동 사용 (보통 불필요)
 await act(async () => {
@@ -127,11 +128,11 @@ await screen.findByText(/완료/i);
 ```typescript
 // ❌ 나쁜 예 - 내부 상태 접근
 expect(component.state.isOpen).toBe(true);
-wrapper.find('.internal-class').simulate('click');
+wrapper.find(".internal-class").simulate("click");
 
 // ✅ 좋은 예 - 사용자 관점 검증
-expect(screen.getByRole('dialog')).toBeVisible();
-await user.click(screen.getByRole('button', { name: /열기/i }));
+expect(screen.getByRole("dialog")).toBeVisible();
+await user.click(screen.getByRole("button", { name: /열기/i }));
 ```
 
 ### 2. container 쿼리 사용
@@ -150,11 +151,11 @@ const button = screen.getByRole('button', { name: /제출/i });
 ```typescript
 // ❌ 나쁜 예 - 동기 요소에 waitFor
 await waitFor(() => {
-  expect(screen.getByText('Hello')).toBeInTheDocument();
+  expect(screen.getByText("Hello")).toBeInTheDocument();
 });
 
 // ✅ 좋은 예 - 동기 요소는 즉시 검증
-expect(screen.getByText('Hello')).toBeInTheDocument();
+expect(screen.getByText("Hello")).toBeInTheDocument();
 ```
 
 **전체 안티패턴 목록**: [references/common-mistakes.md](references/common-mistakes.md)
@@ -163,25 +164,6 @@ expect(screen.getByText('Hello')).toBeInTheDocument();
 
 테스트 환경 설정이 필요한 경우 다음 템플릿 참조:
 
+- `assets/vitest.config.ts` - Vitest 설정 (React 플러그인, 커버리지 포함)
 - `assets/test-setup.ts` - Vitest 글로벌 설정
 - `assets/msw-setup.ts` - MSW 핸들러 및 서버 설정
-
-```typescript
-// vitest.config.ts 예시
-import { defineConfig } from 'vitest/config';
-
-export default defineConfig({
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: './tests/setup.ts',
-  },
-});
-```
-
-## 참고 자료
-
-- [Query Priority Guide](references/query-priority.md) - 쿼리 선택 상세 가이드
-- [User Events Reference](references/user-events.md) - userEvent API 전체 목록
-- [Async Patterns](references/async-patterns.md) - 비동기 테스트 패턴
-- [Common Mistakes](references/common-mistakes.md) - 안티패턴 및 해결법
