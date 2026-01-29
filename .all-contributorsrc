@@ -9,7 +9,19 @@
   "imageSize": 100,
   "commit": false,
   "commitConvention": "angular",
-  "contributors": [],
+  "contributors": [
+    {
+      "login": "DaleSeo",
+      "name": "Dale Seo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5466341?v=4",
+      "profile": "https://www.daleseo.com",
+      "contributions": [
+        "code",
+        "doc"
+      ]
+    }
+  ],
   "contributorsPerLine": 7,
-  "skipCi": true
+  "skipCi": true,
+  "commitType": "docs"
 }
