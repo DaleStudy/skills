@@ -138,6 +138,32 @@ npx skills add dalestudy/skills --skill testing
 npx skills add dalestudy/skills --skill skill-creator
 ```
 
+---
+
+### [typescript](skills/typescript)
+
+TypeScript 타입 정의 및 베스트 프랙티스
+
+**주요 기능:**
+
+- 기본 타입 및 Everyday Types
+- 타입 조작 (Generics, Utility Types, Mapped Types)
+- 타입 가드 및 타입 좁히기
+- tsconfig.json 권장 설정
+- 타입 안전성 패턴
+
+**언제 활성화되나요?**
+
+- `.ts`, `.tsx` 파일 작업 시
+- 타입 정의(interface, type) 작업 시
+- `tsconfig.json` 설정 시
+- 타입 에러 해결 시
+- `typescript`, `type`, `interface`, `generic` 키워드 포함 작업 시
+
+```bash
+npx skills add dalestudy/skills --skill typescript
+```
+
 ## 사용법
 
 설치 후 각 AI 도구에서 자동으로 활성화됩니다:

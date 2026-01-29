@@ -24,6 +24,7 @@ jobs:
           - skill-creator
           - storybook
           - testing
+          - typescript
 
     steps:
       - name: Checkout repository
