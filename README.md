@@ -1,3 +1,5 @@
+[![All Contributors](https://img.shields.io/github/all-contributors/DaleStudy/daleui?color=ee8449&style=flat-square)](#contributors)
+
 # DaleStudy Skills
 
 달레 스터디의 에이전트 스킬 모음입니다.
@@ -215,6 +217,17 @@ skill-creator 가이드를 따라 SKILL.md 작성 및 리소스 추가
 4. **Pull Request 제출**
 
 변경사항을 커밋하고 PR을 보내주세요!
+
+## 기여자
+
+본 프로젝트는 [All Contributors](https://github.com/all-contributors/all-contributors) 관례에 따라 기여자분들의 공헌를 인정하고 감사를 표현하고 있습니다.
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## 관련 링크
 
