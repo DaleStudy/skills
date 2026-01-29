@@ -102,7 +102,7 @@ function process(data: unknown): number {
 
 ## 실전 패턴
 
-- **interface 우선**: 객체 계약·확장은 `interface`, 유니온/인터섹션은 `type`.
+- **interface 우선**: 객체 계약·확장은 `interface`, 유니온/인터섹션은 `type`. API 설명은 명사형으로 작성 (`/** 비활성화 상태 */`).
 - **`as const`**: 리터럴·객체 불변 보존. `typeof obj[keyof typeof obj]` 로 이넘처럼 활용.
 - **브랜드 타입**: `type UserId = string & { readonly brand: unique symbol }` 로 동일 원시 타입 구분.
 - **타입 단언 최소화**: `as` 대신 타입 가드.
