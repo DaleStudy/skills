@@ -225,8 +225,17 @@ skill-creator 가이드를 따라 SKILL.md 작성 및 리소스 추가
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.daleseo.com"><img src="https://avatars.githubusercontent.com/u/5466341?v=4?s=100" width="100px;" alt="Dale Seo"/><br /><sub><b>Dale Seo</b></sub></a><br /><a href="https://github.com/DaleStudy/skills/commits?author=DaleSeo" title="Code">💻</a> <a href="https://github.com/DaleStudy/skills/commits?author=DaleSeo" title="Documentation">📖</a></td>
+    </tr>
+  </tbody>
+</table>
+
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## 관련 링크
