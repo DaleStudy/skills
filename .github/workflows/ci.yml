@@ -20,6 +20,7 @@ jobs:
       matrix:
         skill:
           - bun
+          - git
           - github-actions
           - skill-creator
           - storybook
@@ -75,6 +76,7 @@ jobs:
       matrix:
         skill:
           - bun
+          - git
           - github-actions
           - skill-creator
           - storybook
