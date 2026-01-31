@@ -50,6 +50,32 @@ npx skills add dalestudy/skills --skill bun
 
 ---
 
+### [git](skills/git)
+
+Git 버전 관리 모범 관례 및 워크플로우 가이드
+
+**주요 기능:**
+
+- Conventional Commits 기반 커밋 메시지 작성
+- GitHub Flow 워크플로우 (브랜치 전략, PR 병합 전략)
+- Git 히스토리 관리 (rebase, squash, cherry-pick, amend)
+- Merge conflict 해결 가이드
+- Git 보안 모범 관례 (.gitignore, 시크릿 관리)
+
+**언제 활성화되나요?**
+
+- Git 커밋 메시지 작성 시
+- 브랜치 생성 및 관리 시
+- PR 생성 및 병합 시
+- Git 히스토리 정리 작업 시
+- `git`, `.git`, `commit`, `branch`, `merge`, `rebase` 키워드 포함 작업 시
+
+```bash
+npx skills add dalestudy/skills --skill git
+```
+
+---
+
 ### [github-actions](skills/github-actions)
 
 GitHub Actions 워크플로우 작성 시 보안과 최신 버전 관리
