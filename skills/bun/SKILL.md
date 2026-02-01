@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires bun CLI
 metadata:
   author: DaleStudy
-  version: "1.0"
+  version: "1.0.0"
 allowed-tools: Bash(bun:*) Bash(bunx:*)
 ---
 

@@ -4,7 +4,7 @@ description: "Storybook 스토리 작성 및 CSF 3.0 베스트 프랙티스 스�
 license: MIT
 metadata:
   author: DaleStudy
-  version: "1.0"
+  version: "1.0.0"
 ---
 
 # Storybook

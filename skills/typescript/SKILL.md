@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires TypeScript compiler (tsc)
 metadata:
   author: DaleStudy
-  version: "1.0"
+  version: "1.0.0"
 ---
 
 # TypeScript

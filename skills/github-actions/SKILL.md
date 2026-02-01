@@ -4,7 +4,7 @@ description: "GitHub Actions 워크플로우 생성, 보안 및 버전 관리 �
 license: MIT
 metadata:
   author: DaleStudy
-  version: "1.0"
+  version: "1.0.0"
 allowed-tools: Bash(gh api:*)
 ---
 
