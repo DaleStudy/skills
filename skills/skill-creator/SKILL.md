@@ -1,11 +1,11 @@
 ---
 name: skill-creator
-description: "DaleStudy/skills 저장소에 새로운 스킬을 생성하거나 기존 스킬을 수정할 때 사용. 다음 상황에서 활성화: (1) 새 스킬 생성 요청 시, (2) SKILL.md 파일 작성 또는 수정 시, (3) 스킬 구조나 frontmatter 관련 질문 시, (4) 'skill', 'SKILL.md', 'frontmatter' 키워드가 포함된 작업 시"
+description: "DaleStudy/skills 저장소의 스킬 생성, 수정, 검증 시 사용. 다음 상황에서 활성화: (1) 새 스킬 생성 요청 시, (2) skills/ 디렉토리 내 SKILL.md 파일 수정 시, (3) SKILL.md 변경 검토 또는 리뷰 시, (4) 스킬 frontmatter 또는 메타데이터 작업 시, (5) 'skill', 'SKILL.md', 'frontmatter', 'version', 'metadata', 'review', 'skills/' 키워드가 포함된 작업 시"
 license: MIT
 compatibility: Git repository with skills/ directory
 metadata:
   author: DaleStudy
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Skill Creator for DaleStudy
@@ -103,12 +103,12 @@ matrix:
 
 ## 기존 스킬 참고
 
-| 스킬             | 특징                                           |
-| ---------------- | ---------------------------------------------- |
-| `bun`            | 명령어 매핑 테이블, 코드 예제 중심             |
-| `github-actions` | 보안 모범 사례, YAML 예제 중심                 |
-| `skill-creator`  | 메타 스킬, 구조화된 절차, frontmatter 가이드   |
-| `storybook`      | CSF 3.0 베스트 프랙티스, TypeScript 타입 예제  |
+| 스킬             | 특징                                          |
+| ---------------- | --------------------------------------------- |
+| `bun`            | 명령어 매핑 테이블, 코드 예제 중심            |
+| `github-actions` | 보안 모범 사례, YAML 예제 중심                |
+| `skill-creator`  | 메타 스킬, 구조화된 절차, frontmatter 가이드  |
+| `storybook`      | CSF 3.0 베스트 프랙티스, TypeScript 타입 예제 |
 
 새 스킬 작성 시 기존 스킬의 스타일을 참고하여 일관성 유지.
 
@@ -163,13 +163,55 @@ metadata:
 
 ### 버전 업데이트 체크리스트
 
+**CRITICAL: 스킬 SKILL.md 파일을 수정할 때마다 반드시 버전을 업데이트하세요.**
+
 스킬 수정 후:
 
 1. [ ] 변경 내용이 MAJOR/MINOR/PATCH 중 어디에 해당하는지 판단
-2. [ ] `metadata.version` 필드 업데이트
+2. [ ] `metadata.version` 필드 업데이트 (필수)
 3. [ ] (선택) CHANGELOG.md 작성 (주요 변경 시)
 
-## 검증
+**버전 미업데이트는 스킬 검증 실패로 간주됩니다.**
+
+## 스킬 변경 시 자동 검증
+
+**IMPORTANT: SKILL.md 파일을 수정할 때, 반드시 다음을 확인하세요:**
+
+### 1. 버전 업데이트 검증
+
+SKILL.md 파일이 수정되었다면 `metadata.version`도 함께 업데이트되어야 합니다:
+
+```bash
+# 변경된 SKILL.md 확인
+git diff --name-only HEAD | grep "skills/.*/SKILL.md"
+
+# 또는 커밋 전 staged 파일 확인
+git diff --cached --name-only | grep "skills/.*/SKILL.md"
+
+# metadata.version 필드가 변경되었는지 확인
+git diff HEAD -- skills/{skill-name}/SKILL.md | grep "^\+.*version:"
+git diff --cached -- skills/{skill-name}/SKILL.md | grep "^\+.*version:"
+
+# 변경되지 않았다면:
+# ❌ ERROR: skills/{skill-name}/SKILL.md was modified but metadata.version was not updated
+# Required: Update version according to Semantic Versioning (see 버전 관리 section above)
+```
+
+### 2. 버전 증가 방향 검증
+
+변경된 내용이 올바른 버전 증가를 따르는지 확인:
+
+- **MAJOR 변경인데 MINOR/PATCH 증가**: ❌ 에러
+- **MINOR 변경인데 PATCH 증가**: ⚠️ 경고
+- **PATCH 변경인데 MINOR/MAJOR 증가**: ✅ 허용 (보수적 증가는 안전)
+
+### 3. Frontmatter 유효성 검증
+
+- `name` 필드가 디렉토리명과 일치하는가?
+- `description` 필드가 트리거 조건을 포함하는가? ("다음 상황에서 사용:" 패턴)
+- `metadata.version` 형식이 "X.Y.Z" (Semantic Versioning)인가?
+
+## 수동 검증
 
 스킬 설치 테스트:
 
