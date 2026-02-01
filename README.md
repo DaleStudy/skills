@@ -1,4 +1,4 @@
-[![All Contributors](https://img.shields.io/github/all-contributors/DaleStudy/daleui?color=ee8449&style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/github/all-contributors/DaleStudy/skills?color=ee8449&style=flat-square)](#contributors)
 
 # DaleStudy Skills
 
