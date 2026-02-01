@@ -32,7 +32,7 @@ jobs:
           fetch-depth: 1
 
       - name: Install skill-creator
-        run: npx skills add dalestudy/skills@skill-creator --yes
+        run: npx skills add dalestudy/skills@skill-creator -agent claude-code --yes
 
       - name: Run Claude Code Review
         id: claude-review
