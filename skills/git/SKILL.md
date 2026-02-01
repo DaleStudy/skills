@@ -4,7 +4,7 @@ description: "Git 버전 관리 모범 관례 및 워크플로우 가이드. 다
 license: MIT
 metadata:
   author: DaleStudy
-  version: "1.0"
+  version: "1.0.0"
 allowed-tools: Bash(git:*)
 ---
 
@@ -99,6 +99,24 @@ main (항상 배포 가능한 상태)
 └── refactor/user-service
 ```
 
+#### 기본 브랜치
+
+새 저장소 생성 시 기본 브랜치는 `main`을 사용한다 (과거의 `master` 대신):
+
+```bash
+# 새 저장소 초기화 시 main 브랜치로 시작
+git init -b main
+
+# 또는 기존 저장소에서 기본 브랜치 변경
+git branch -m master main
+git push -u origin main
+
+# Git 전역 설정 (모든 새 저장소에 적용)
+git config --global init.defaultBranch main
+```
+
+**참고**: GitHub, GitLab, Bitbucket 등 대부분의 Git 호스팅 서비스는 2020년부터 기본 브랜치를 `main`으로 사용한다.
+
 #### 브랜치 네이밍
 
 ```bash
@@ -142,11 +160,11 @@ git branch -d feature/dark-mode
 
 ### PR 병합 전략
 
-| 전략         | 설명                              | 언제 사용                   |
-| ------------ | --------------------------------- | --------------------------- |
-| **Squash**   | 모든 커밋을 하나로 합침           | 기능 브랜치 (권장)          |
-| **Merge**    | 병합 커밋 생성, 히스토리 보존     | 릴리스 브랜치               |
-| **Rebase**   | 선형 히스토리 유지, 병합 커밋 X   | 간단한 변경, 깔끔한 히스토리 |
+| 전략       | 설명                            | 언제 사용                    |
+| ---------- | ------------------------------- | ---------------------------- |
+| **Squash** | 모든 커밋을 하나로 합침         | 기능 브랜치 (권장)           |
+| **Merge**  | 병합 커밋 생성, 히스토리 보존   | 릴리스 브랜치                |
+| **Rebase** | 선형 히스토리 유지, 병합 커밋 X | 간단한 변경, 깔끔한 히스토리 |
 
 ```bash
 # Squash (권장 - 기능 단위로 커밋 정리)
