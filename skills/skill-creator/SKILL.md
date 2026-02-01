@@ -5,7 +5,7 @@ license: MIT
 compatibility: Git repository with skills/ directory
 metadata:
   author: DaleStudy
-  version: "1.0"
+  version: "1.0.0"
 ---
 
 # Skill Creator for DaleStudy
@@ -29,7 +29,7 @@ license: MIT # 선택
 compatibility: Required CLI tools # 선택: 필요한 도구
 metadata: # 선택
   author: DaleStudy
-  version: "1.0"
+  version: "1.0.0"
 allowed-tools: Bash(command:*) # 선택: 허용할 도구 패턴
 ---
 # 스킬 제목
@@ -111,6 +111,63 @@ matrix:
 | `storybook`      | CSF 3.0 베스트 프랙티스, TypeScript 타입 예제  |
 
 새 스킬 작성 시 기존 스킬의 스타일을 참고하여 일관성 유지.
+
+## 버전 관리
+
+Semantic Versioning (MAJOR.MINOR.PATCH)을 따라 스킬 수정 시 버전 업데이트:
+
+### MAJOR 버전 (x.0.0)
+
+**호환성이 깨지는 변경** - 기존 사용자에게 영향:
+
+- Frontmatter 필수 필드 추가/변경
+- `allowed-tools` 권한 축소
+- 스킬 트리거 조건 대폭 변경 (description 수정)
+- 기존 지시사항과 상충되는 새 규칙 도입
+
+```yaml
+# 예: 1.2.3 → 2.0.0
+metadata:
+  version: "2.0.0"
+```
+
+### MINOR 버전 (0.x.0)
+
+**새 기능 추가** - 하위 호환 유지:
+
+- 새로운 예제 코드 추가
+- 지시사항 섹션 추가 (기존과 충돌 없음)
+- `allowed-tools` 권한 확대
+- 트리거 조건 확장 (기존 조건 유지)
+
+```yaml
+# 예: 1.2.3 → 1.3.0
+metadata:
+  version: "1.3.0"
+```
+
+### PATCH 버전 (0.0.x)
+
+**버그 수정 및 사소한 개선**:
+
+- 오타 수정
+- 설명 명확화 (의미 변경 없음)
+- 코드 예제 포맷 정리
+- 링크 업데이트
+
+```yaml
+# 예: 1.2.3 → 1.2.4
+metadata:
+  version: "1.2.4"
+```
+
+### 버전 업데이트 체크리스트
+
+스킬 수정 후:
+
+1. [ ] 변경 내용이 MAJOR/MINOR/PATCH 중 어디에 해당하는지 판단
+2. [ ] `metadata.version` 필드 업데이트
+3. [ ] (선택) CHANGELOG.md 작성 (주요 변경 시)
 
 ## 검증
 
