@@ -123,8 +123,46 @@ npx skills add dalestudy/skills --skill bun
 - **testing**: React Testing Library 및 Vitest 테스팅 모범 관례
 - **typescript**: TypeScript 타입 정의 및 모범 관례
 
+## GitHub App 스킬 통합
+
+### 자동 스킬 검증
+
+모든 PR에서 `.github/workflows/claude-code-review.yml` 워크플로우가 자동으로:
+
+1. **skill-creator 설치**: `npx skills add . --skill skill-creator --agent claude-code --global --yes` 실행
+2. **Claude Code 자동 활성화**: SKILL.md 변경 시 skill-creator의 `description` 매칭으로 자동 로드
+3. **검증 수행** (SKILL.md 변경 시):
+   - ✅ Frontmatter YAML 문법 정확성
+   - ✅ `name` 필드와 디렉토리명 일치
+   - ✅ `description` 필드에 트리거 조건 포함 여부
+   - ✅ `.github/workflows/ci.yml`의 `matrix.skill` 배열 업데이트 확인
+   - ✅ 네이밍 규칙 (소문자, 하이픈, 최대 64자)
+
+### 테스트 방법
+
+```bash
+# SKILL.md 변경을 포함한 테스트 PR 생성
+mkdir -p skills/test-skill
+cat > skills/test-skill/SKILL.md <<EOF
+---
+name: test-skill
+description: "테스트 스킬"
+---
+# Test Skill
+EOF
+
+git add skills/test-skill/
+git commit -m "test: add test-skill for validation testing"
+git push origin test/skill-validation
+gh pr create --title "test: Skill validation workflow" \
+  --body "Testing skill-creator integration in GitHub App"
+```
+
+**기대 결과:** Claude Code가 PR에 `description` 필드 부족 및 CI matrix 누락을 지적하는 코멘트 생성
+
 ## Important Notes
 
 - **스킬 추가 후 CI 업데이트 필수**: `.github/workflows/ci.yml`의 `matrix.skill` 배열에 새 스킬명 추가
 - **SKILL.md만 수정하면 됨**: 빌드 과정 없음, 변경사항은 즉시 반영됨
 - **`description` 작성이 핵심**: AI 에이전트가 올바른 상황에서 스킬을 활성화하도록 구체적으로 기술
+- **GitHub App 자동 검증**: SKILL.md 변경 시 skill-creator가 자동으로 PR 리뷰에서 검증 수행
