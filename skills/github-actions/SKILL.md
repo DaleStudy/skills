@@ -28,7 +28,9 @@ uses: actions/checkout@v6
 
 ```bash
 gh api repos/{owner}/{repo}/releases/latest --jq '.tag_name'
-	@@ -34,48 +39,51 @@ gh api repos/actions/checkout/releases/latest --jq '.tag_name'
+
+# 예시
+gh api repos/actions/checkout/releases/latest --jq '.tag_name'
 gh api repos/oven-sh/setup-bun/releases/latest --jq '.tag_name'
 ```
 
@@ -75,7 +77,10 @@ run: |
 
 ```yaml
 # ⚠️ 위험 - 포크의 코드를 신뢰된 컨텍스트에서 실행
-	@@ -86,53 +94,8 @@ steps:
+on: pull_request_target
+steps:
+  - uses: actions/checkout@v{N}
+    with:
       ref: ${{ github.event.pull_request.head.sha }} # 위험!
 ```
 
@@ -116,7 +121,7 @@ steps:
 권한은 가능한 하위 레벨에 선언. 범위를 좁게 유지:
 
 ```yaml
-# ✅ 권한 범위: step > job > workflow (하위일수록 좋음)
+# ✅ 권한 범위: workflow > job > step (좁을수록 좋음)
 jobs:
   build:
     permissions:
