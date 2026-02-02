@@ -19,26 +19,26 @@ Git 버전 관리 모범 관례 및 워크플로우 가이드.
 커밋 메시지는 `<type>: <description>` 형식을 따른다:
 
 ```
-feat: 로그인 폼 검증 기능 추가
-fix: 회원가입 시 이메일 중복 체크 오류 수정
-docs: README에 설치 가이드 추가
-refactor: 사용자 인증 로직 모듈화
-test: 결제 기능 테스트 추가
-chore: 의존성 버전 업데이트
+feat: add form validation to login page
+fix: prevent duplicate email check error on signup
+docs: add installation guide to README
+refactor: extract auth logic into separate module
+test: add payment feature tests
+chore: update dependencies
 ```
 
 #### 주요 타입
 
-| 타입       | 설명                                     | 예시                                |
-| ---------- | ---------------------------------------- | ----------------------------------- |
-| `feat`     | 새로운 기능 추가                         | `feat: 다크모드 지원`               |
-| `fix`      | 버그 수정                                | `fix: 로그아웃 시 토큰 미삭제 수정` |
-| `docs`     | 문서 변경 (코드 변경 없음)               | `docs: API 문서 업데이트`           |
-| `style`    | 코드 포맷팅, 세미콜론 누락 (동작 변경 X) | `style: ESLint 규칙 적용`           |
-| `refactor` | 리팩토링 (기능 변경 없음)                | `refactor: 유틸 함수 분리`          |
-| `test`     | 테스트 코드 추가/수정                    | `test: 로그인 API 테스트 추가`      |
-| `chore`    | 빌드, 설정 변경 (src 변경 없음)          | `chore: Webpack 설정 업데이트`      |
-| `perf`     | 성능 개선                                | `perf: 이미지 지연 로딩 적용`       |
+| 타입       | 설명                                     | 예시                                      |
+| ---------- | ---------------------------------------- | ----------------------------------------- |
+| `feat`     | 새로운 기능 추가                         | `feat: add dark mode support`             |
+| `fix`      | 버그 수정                                | `fix: prevent token deletion on logout`   |
+| `docs`     | 문서 변경 (코드 변경 없음)               | `docs: update API documentation`          |
+| `style`    | 코드 포맷팅, 세미콜론 누락 (동작 변경 X) | `style: apply ESLint rules`               |
+| `refactor` | 리팩토링 (기능 변경 없음)                | `refactor: extract utility functions`     |
+| `test`     | 테스트 코드 추가/수정                    | `test: add login API tests`               |
+| `chore`    | 빌드, 설정 변경 (src 변경 없음)          | `chore: update Webpack config`            |
+| `perf`     | 성능 개선                                | `perf: implement lazy loading for images` |
 
 #### 상세 형식 (선택사항)
 
@@ -53,11 +53,11 @@ chore: 의존성 버전 업데이트
 예시:
 
 ```
-feat(auth): JWT 기반 인증 구현
+feat(auth): implement JWT-based authentication
 
-- Access token과 refresh token 발급
-- Redis를 통한 refresh token 저장
-- 토큰 갱신 API 엔드포인트 추가
+- Issue access and refresh tokens
+- Store refresh tokens in Redis
+- Add token renewal API endpoint
 
 Closes #123
 ```
@@ -66,27 +66,28 @@ Closes #123
 
 ```bash
 # ❌ 타입 누락
-git commit -m "버그 수정"
+git commit -m "bug fix"
 
 # ❌ 모호한 설명
-git commit -m "fix: 수정"
+git commit -m "fix: fix issue"
 
 # ❌ 한 커밋에 여러 작업
-git commit -m "feat: 로그인, 회원가입, 비밀번호 찾기 구현"
+git commit -m "feat: implement login, signup, and password reset"
 
 # ✅ 명확하고 단일 책임
-git commit -m "feat: 로그인 폼 검증 기능 추가"
+git commit -m "feat: add form validation to login page"
 ```
 
 ### 커밋 메시지 작성 가이드라인
 
 1. **첫 줄은 50자 이내** - 간결한 요약
-2. **현재형 사용** - "추가했다" (X) → "추가" (O)
-3. **명령형 어조** - "추가하세요" (X) → "추가" (O)
-4. **첫 글자 대문자 금지** (한글 제외) - `Feat:` (X) → `feat:` (O)
-5. **마침표 금지** - `feat: 기능 추가.` (X) → `feat: 기능 추가` (O)
+2. **현재형 사용** - "added" (X) → "add" (O)
+3. **명령형 어조** - "adds" (X) → "add" (O)
+4. **첫 글자 소문자** - `Feat:` (X) → `feat:` (O)
+5. **마침표 금지** - `feat: add feature.` (X) → `feat: add feature` (O)
 6. **본문은 72자마다 줄바꿈** - 가독성 향상
 7. **Why > What** - 변경한 내용보다 변경한 이유를 설명
+8. **영어로 작성** - 릴리즈 노트 생성 도구와의 호환성을 위해
 
 ## GitHub Flow 워크플로우
 
@@ -133,27 +134,27 @@ chore/update-dependencies
 
 ```bash
 # 1. main에서 최신 상태 받기
-git checkout main
+git switch main
 git pull origin main
 
 # 2. 새 브랜치 생성
-git checkout -b feature/dark-mode
+git switch -c feature/dark-mode
 
 # 3. 작업 후 커밋
 git add .
-git commit -m "feat: 다크모드 토글 버튼 추가"
+git commit -m "feat: add dark mode toggle button"
 
 # 4. 원격 브랜치에 푸시
 git push origin feature/dark-mode
 
 # 5. GitHub에서 PR 생성
-gh pr create --title "feat: 다크모드 지원" --body "..."
+gh pr create --title "feat: add dark mode support" --body "..."
 
 # 6. 코드 리뷰 후 main에 병합 (GitHub UI 또는 CLI)
 gh pr merge <PR번호> --squash  # 또는 --merge, --rebase
 
 # 7. 로컬 main 업데이트 및 브랜치 삭제
-git checkout main
+git switch main
 git pull origin main
 git branch -d feature/dark-mode
 ```
@@ -200,25 +201,25 @@ git rebase -i HEAD~3
 
 ```bash
 # Before
-pick a1b2c3d feat: 로그인 기능
-pick d4e5f6g fix: 오타 수정
-pick g7h8i9j fix: 변수명 수정
+pick a1b2c3d feat: implement login feature
+pick d4e5f6g fix: typo in variable name
+pick g7h8i9j fix: rename variable for clarity
 
 # After (squash 사용)
-pick a1b2c3d feat: 로그인 기능
-fixup d4e5f6g fix: 오타 수정
-fixup g7h8i9j fix: 변수명 수정
+pick a1b2c3d feat: implement login feature
+fixup d4e5f6g fix: typo in variable name
+fixup g7h8i9j fix: rename variable for clarity
 ```
 
 #### Rebase onto main (브랜치 최신화)
 
 ```bash
 # 1. main 최신화
-git checkout main
+git switch main
 git pull origin main
 
 # 2. feature 브랜치를 main 위로 rebase
-git checkout feature/my-feature
+git switch feature/my-feature
 git rebase main
 
 # 3. 충돌 발생 시
@@ -248,7 +249,7 @@ git cherry-pick --continue
 
 ```bash
 # 마지막 커밋 메시지만 수정
-git commit --amend -m "fix: 수정된 커밋 메시지"
+git commit --amend -m "fix: correct commit message"
 
 # 마지막 커밋에 파일 추가
 git add forgotten-file.ts
@@ -313,10 +314,10 @@ git rebase --continue
 
 ```bash
 # 현재 브랜치 변경사항 우선
-git checkout --ours <file>
+git restore --ours <file>
 
 # 상대 브랜치 변경사항 우선
-git checkout --theirs <file>
+git restore --theirs <file>
 
 # merge 취소
 git merge --abort
@@ -326,6 +327,43 @@ git rebase --abort
 ```
 
 ## 자주 사용하는 명령어
+
+### 브랜치 작업 (git switch)
+
+```bash
+# 기존 브랜치로 전환
+git switch main
+git switch feature/my-feature
+
+# 새 브랜치 생성 + 전환
+git switch -c feature/new-feature
+
+# 이전 브랜치로 돌아가기
+git switch -
+
+# 원격 브랜치 추적하며 전환
+git switch -c local-branch origin/remote-branch
+```
+
+**참고**: Git 2.23+ (2019년 8월)부터 `git switch`를 사용한다. 기존 `git checkout`은 브랜치 전환, 파일 복원 등 여러 역할을 담당해 혼란을 야기했다. `git switch`는 브랜치 전환만 담당한다.
+
+### 파일 복원 (git restore)
+
+```bash
+# 작업 디렉토리 파일 복원 (unstaged 변경사항 취소)
+git restore <file>
+
+# Staging 취소 (unstaged로 되돌림)
+git restore --staged <file>
+
+# 작업 디렉토리 + Staging 모두 복원
+git restore --staged --worktree <file>
+
+# 특정 커밋의 파일로 복원
+git restore --source=<commit-hash> <file>
+```
+
+**참고**: `git restore`는 파일 복원 전용 명령어다. 기존 `git checkout -- <file>`을 대체한다.
 
 ### 상태 확인
 
@@ -400,7 +438,7 @@ git push -f origin feature/my-branch
 
 ```bash
 # PR 생성
-gh pr create --title "feat: 새 기능" --body "설명..."
+gh pr create --title "feat: add new feature" --body "Description..."
 
 # PR 목록 확인
 gh pr list
@@ -415,7 +453,7 @@ gh pr checkout 123
 gh pr merge 123 --squash
 
 # Issue 생성
-gh issue create --title "버그 발견" --body "설명..."
+gh issue create --title "Bug found" --body "Description..."
 ```
 
 ## 추가 학습 자료
