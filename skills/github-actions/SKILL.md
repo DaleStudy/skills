@@ -4,32 +4,27 @@ description: "GitHub Actions 워크플로우 생성, 보안 및 버전 관리 �
 license: MIT
 metadata:
   author: DaleStudy
-  version: "1.0.0"
+  version: "1.1.0"
 allowed-tools: Bash(gh api:*)
 ---
 
 # GitHub Actions
 
-## 모범 관례
+## 주의 사항 (Anti-patterns)
 
-### 1. 최신 메이저 버전 사용
-
-새 워크플로우 작성 시 최신 메이저 버전 확인 필수.
+### 1. 오래된 버전 사용
 
 ```yaml
-# ❌ 브랜치 직접 참조 - 항상 변경됨
-uses: actions/checkout@main
-
 # ❌ 오래된 버전 - 가장 흔한 실수
-uses: actions/checkout@v5
+uses: actions/checkout@v4 # v6가 최신인 경우
 
 # ✅ 최신 메이저 버전 (gh api로 확인 후 사용)
 uses: actions/checkout@v6
 ```
 
-> 참고: 보안 민감 환경이나 신뢰도 낮은 서드파티 액션은 [SHA 피닝](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions)(`@a1b2c3...`)을 고려.
+최신 버전에서 제공하는 성능 개선과 보안 패치를 놓치지 않도록 합니다.
 
-버전 확인 명령어:
+**버전 확인 명령어:**
 
 ```bash
 gh api repos/{owner}/{repo}/releases/latest --jq '.tag_name'
@@ -39,51 +34,46 @@ gh api repos/actions/checkout/releases/latest --jq '.tag_name'
 gh api repos/oven-sh/setup-bun/releases/latest --jq '.tag_name'
 ```
 
-### 2. 최소 권한 원칙
+> 참고: 보안 민감 환경이나 신뢰도 낮은 서드파티 액션은 [SHA 피닝](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions)(`@a1b2c3...`)을 고려.
 
-권한은 가능한 하위 레벨에 선언. 범위를 좁게 유지.
-
-```yaml
-# 권한 범위: step > job > workflow (하위일수록 좋음)
-jobs:
-  build:
-    permissions:
-      contents: read # job 레벨에서 필요한 권한만
-```
-
-> 참고: [Modifying the permissions for the GITHUB_TOKEN](https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token)
-
-### 3. 시크릿 관리
+### 2. 민감정보 하드코딩
 
 ```yaml
-# ❌ 하드코딩
+# ❌ 하드코딩 - 보안 위험
 env:
   API_KEY: "sk-1234567890"
-
+  DATABASE_PASSWORD: "mypassword123"
 # ✅ secrets 사용
 env:
   API_KEY: ${{ secrets.API_KEY }}
+  DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
 ```
+
+비밀번호나 API Key와 같은 민감 정보가 그대로 노출되어 보안 사고로 이어질 수 있습니다.
+보안 상 중요한 정보는 반드시 저장소나 조직의 시크릿으로 저장해놓고 읽어 와야합니다.
 
 > 참고: [Using secrets](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions)
 
-### 4. 입력값 인젝션 방지
+### 3. 입력값 인젝션 취약점
 
 ```yaml
 # ❌ 인젝션 취약 - github.event 직접 사용
 run: echo "${{ github.event.issue.title }}"
-
-# ✅ 환경변수로 전달
+run: gh issue comment ${{ github.event.issue.number }} --body "${{ github.event.comment.body }}"
+# ✅ 환경변수로 전달하여 인젝션 방지
 env:
   ISSUE_TITLE: ${{ github.event.issue.title }}
-run: echo "$ISSUE_TITLE"
+  COMMENT_BODY: ${{ github.event.comment.body }}
+run: |
+  echo "$ISSUE_TITLE"
+  gh issue comment ${{ github.event.issue.number }} --body "$COMMENT_BODY"
 ```
+
+악의적인 사용자가 이슈 제목이나 코멘트에 셸 명령어를 주입할 수 있습니다.
 
 > 참고: [Script injections](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#understanding-the-risk-of-script-injections)
 
-### 5. Pull Request 보안
-
-`pull_request_target`은 포크의 PR에서도 시크릿에 접근 가능. 포크 코드를 체크아웃하면 악성 코드 실행 위험.
+### 4. pull_request_target 이벤트 오용
 
 ```yaml
 # ⚠️ 위험 - 포크의 코드를 신뢰된 컨텍스트에서 실행
@@ -94,7 +84,51 @@ steps:
       ref: ${{ github.event.pull_request.head.sha }} # 위험!
 ```
 
+`pull_request_target` 이벤트는 포크의 PR에서도 시크릿에 접근 가능합니다. 포크 코드를 체크아웃하면 악성 코드가 실행될 수 있습니다.
+
 > 참고: [pull_request_target](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request_target)
+
+### 5. 사전 설치된 도구에 중복 설정
+
+```yaml
+# ❌ 불필요한 setup - node, npm, npx는 이미 설치됨
+steps:
+  - uses: actions/setup-node@v{N}
+  - run: npx some-command
+# ✅ 바로 사용
+steps:
+  - run: npx some-command
+  - run: python script.py
+  - run: docker build .
+```
+
+중복 설치는 워크플로우 실행 시간을 늘리고 불필요한 네트워크 요청을 발생시킵니다.
+
+**주요 사전 설치 도구:** Node.js, npm, npx, Python, pip, Ruby, gem, Go, Docker, git, gh, curl, wget, jq, yq
+
+**주요 미설치 도구:** Bun, Deno, Rust, Zig, pnpm, Poetry, Ruff
+
+**사전 설치된 도구 확인:**
+
+- Ubuntu: https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md
+- macOS: https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md
+- Windows: https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md
+
+## 모범 사례 (Best Practices)
+
+### 최소 권한 원칙
+
+권한은 가능한 하위 레벨에 선언. 범위를 좁게 유지:
+
+```yaml
+# ✅ 권한 범위: workflow > job > step (좁을수록 좋음)
+jobs:
+  build:
+    permissions:
+      contents: read # job 레벨에서 필요한 권한만
+```
+
+> 참고: [Modifying the permissions for the GITHUB_TOKEN](https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token)
 
 ## 권장 워크플로우 구조
 
