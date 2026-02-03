@@ -54,6 +54,34 @@ npx skills add dalestudy/skills --skill bun
 
 Git 버전 관리 모범 관례 및 워크플로우 가이드
 
+---
+
+### [mcp](skills/mcp)
+
+MCP(Model Context Protocol) 서버 생성·구현 가이드
+
+**주요 기능:**
+
+- Tools/Resources/Prompts 정의·등록
+- TypeScript·Python 등 SDK로 프로젝트 셋업
+- inputSchema(JSON Schema) 및 핸들러 구현
+- stdio/SSE/HTTP 트랜스포트 설정
+- STDIO 서버 시 로깅 규칙 (stdout 금지)
+- MCP Inspector로 테스트
+
+**언제 활성화되나요?**
+
+- 새 MCP 서버 프로젝트를 만들 때
+- Tools·Resources·Prompts 구현·수정 시
+- 트랜스포트·클라이언트 설정 시
+- `mcp`, MCP 서버, `@modelcontextprotocol/sdk` 등 키워드 포함 작업 시
+
+```bash
+npx skills add dalestudy/skills --skill mcp
+```
+
+---
+
 **주요 기능:**
 
 - Conventional Commits 기반 커밋 메시지 작성
