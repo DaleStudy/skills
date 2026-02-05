@@ -117,7 +117,9 @@ npx skills add dalestudy/skills --skill bun
 ## Current Skills
 
 - **bun**: Node.js 대신 Bun 런타임 사용
+- **git**: Git 버전 관리 모범 관례 및 워크플로우
 - **github-actions**: GitHub Actions 워크플로우 작성 및 보안
+- **mcp**: MCP(Model Context Protocol) 서버 생성·구현
 - **skill-creator**: 새 스킬 생성 가이드
 - **storybook**: Storybook CSF 3.0 스토리 작성
 - **testing**: React Testing Library 및 Vitest 테스팅 모범 관례
