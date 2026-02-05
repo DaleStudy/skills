@@ -49,6 +49,8 @@ export const Primary: Story = {
 
 컴포넌트 Props를 Args로 정의하여 Controls 패널에서 인터랙티브하게 조작 가능.
 
+**기본값은 `args`에서 선언** (❌ `argTypes.defaultValue` 사용 금지). Meta의 `args`에 기본값을 두면 Controls 패널에서 자동으로 해당 값이 선택
+
 ```tsx
 // ❌ 하드코딩된 Props
 export const Disabled: Story = {
@@ -87,6 +89,10 @@ const meta: Meta<typeof Button> = {
 const meta = {
   title: 'Components/Button',
   component: Button,
+  args: {
+    size: 'md',
+    variant: 'primary',
+  },
   argTypes: {
     variant: {
       control: 'select',
@@ -195,6 +201,10 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
+  args: {
+    size: 'md',
+    variant: 'primary',
+  },
   argTypes: {
     variant: {
       control: 'select',
@@ -243,6 +253,8 @@ export const WithCustomTheme: Story = {
 ```
 
 ## 자주 사용되는 ArgTypes 옵션
+
+> **참고:** 기본값은 `argTypes.defaultValue`가 아닌 **`args`**에서 선언
 
 ```tsx
 argTypes: {
