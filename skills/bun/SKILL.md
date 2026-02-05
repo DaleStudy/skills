@@ -11,7 +11,7 @@ allowed-tools: Bash(bun:*) Bash(bunx:*)
 
 # Bun
 
-Node.js 대신 Bun을 기본 런타임으로 사용.
+Node.js 대신 Bun을 기본 런타임으로 사용. test test
 
 ## 설치
 
