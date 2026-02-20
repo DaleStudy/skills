@@ -146,6 +146,31 @@ npx skills add dalestudy/skills --skill testing
 
 ---
 
+### [react](skills/react)
+
+React 성능 최적화 및 베스트 프랙티스 (Vercel Engineering 기반, 프레임워크 비종속)
+
+**주요 기능:**
+
+- 비동기 워터폴 제거 (Promise.all, await 지연, Suspense 경계)
+- 번들 사이즈 최적화 (barrel import 지양, React.lazy, 프리로드)
+- 리렌더링 최적화 (함수형 setState, 지연 초기화, memo, startTransition)
+- 렌더링 성능 (SVG 래퍼, content-visibility, 정적 JSX 호이스팅)
+- JavaScript 성능 (Map/Set, toSorted, 조기 반환)
+
+**언제 활성화되나요?**
+
+- `.tsx`, `.jsx` React 컴포넌트 파일 작업 시
+- 상태 관리, hooks, 리렌더링 최적화 작업 시
+- 번들 사이즈 최적화 또는 코드 스플리팅 시
+- `react`, `useState`, `useEffect`, `useMemo`, `useCallback`, `memo`, `Suspense`, `lazy` 키워드 포함 작업 시
+
+```bash
+npx skills add dalestudy/skills --skill react
+```
+
+---
+
 ### [skill-creator](skills/skill-creator)
 
 새 스킬 생성 및 관리 가이드
