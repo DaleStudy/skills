@@ -76,13 +76,39 @@ npx skills add dalestudy/skills --skill git
 
 ---
 
+### [github](skills/github)
+
+GitHub CLI(`gh`)를 활용한 GitHub 플랫폼 상호작용 가이드
+
+**주요 기능:**
+
+- `gh api` 대신 구체적 서브커맨드 사용 (보안/권한 제어)
+- Read/Write 명령어 분류 (Write 작업 시 사용자 확인 필수)
+- 이슈, PR, 릴리스, 레이블 관리 모범 사례
+- 워크플로우 실행 및 결과 조회 (로그 확인, 재실행)
+- 주요 `gh` 서브커맨드 레퍼런스
+
+**언제 활성화되나요?**
+
+- GitHub 이슈 생성, 조회, 수정 시
+- Pull Request 생성, 리뷰, 병합 시
+- 릴리스 생성 및 관리 시
+- 워크플로우 실행 및 결과 조회 시
+- `gh`, `issue`, `pull request`, `PR`, `release`, `label`, `workflow`, `run` 키워드 포함 작업 시
+
+```bash
+npx skills add dalestudy/skills --skill github
+```
+
+---
+
 ### [github-actions](skills/github-actions)
 
 GitHub Actions 워크플로우 작성 시 보안과 최신 버전 관리
 
 **주요 기능:**
 
-- 최신 액션 버전 자동 확인 (`gh api` 활용)
+- 최신 액션 버전 자동 확인 (`gh release view` 활용)
 - 최소 권한 원칙 및 시크릿 관리
 - 입력값 인젝션 방지 패턴
 - `pull_request_target` 보안 가이드
