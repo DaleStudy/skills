@@ -16,7 +16,11 @@ Node.js 대신 Bun을 기본 런타임으로 사용.
 ## 설치
 
 ```bash
-curl -fsSL https://bun.sh/install | bash
+# macOS / Linux
+brew install oven-sh/bun/bun
+
+# npm
+npm install -g bun
 ```
 
 ## 명령어 매핑
@@ -74,6 +78,36 @@ bun src/server.ts
 # 단축 (run 생략 가능)
 bun dev
 ```
+
+## 주의 사항
+
+### 1. 패키지 설치 전 이름 확인
+
+```bash
+# ❌ 오타 또는 유사 패키지 - 타이포스쿼팅 위험
+bun add expres
+bun add lodassh
+
+# ✅ 정확한 패키지명 확인 후 설치
+bun add express
+bun add lodash
+```
+
+`bun add` 실행 전 패키지명이 정확한지 확인. npm 레지스트리에 유사한 이름의 악성 패키지가 등록될 수 있음.
+
+### 2. 신뢰할 수 없는 스크립트 실행 금지
+
+```bash
+# ❌ 출처 불명의 스크립트 직접 실행
+bun run https://example.com/script.ts
+curl -fsSL https://example.com/install.sh | bash
+
+# ✅ 로컬 프로젝트 내 스크립트만 실행
+bun run src/index.ts
+bun run dev
+```
+
+원격 스크립트나 검증되지 않은 파일은 직접 실행하지 않음.
 
 ## GitHub Actions
 
