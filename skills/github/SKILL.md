@@ -11,6 +11,8 @@ allowed-tools: Bash(gh issue:*) Bash(gh pr:*) Bash(gh release:*) Bash(gh label:*
 
 # GitHub CLI
 
+> **참고:** GitHub 작업은 Git 명령어와 함께 사용되는 경우가 많다. 커밋 컨벤션, 브랜치 전략, 히스토리 관리 등은 `git` 스킬을 함께 로드하여 참조한다.
+
 ## 주의 사항 (Anti-patterns)
 
 ### 1. `gh api` 사용 금지
@@ -44,19 +46,7 @@ gh issue create --title "Bug fix" --body "Fixed it"
 
 이슈 생성, PR 병합, 코멘트 작성 등 외부에 영향을 미치는 Write 작업은 반드시 사용자에게 내용을 보여주고 확인을 받은 뒤 수행한다.
 
-### 3. 현재 디렉토리에서 불필요한 `git -C` 사용
-
-```bash
-# ❌ 현재 디렉토리가 대상 레포지토리인데 -C 옵션 사용
-git -C /path/to/current/repo log --oneline
-
-# ✅ 현재 디렉토리에서 바로 실행
-git log --oneline
-```
-
-현재 디렉토리가 작업 대상 레포지토리와 동일하면 `git -C` 옵션은 불필요한 중복이다. 다른 경로의 레포지토리를 대상으로 할 때만 사용한다.
-
-### 4. 하드코딩된 레포지토리 정보
+### 3. 하드코딩된 레포지토리 정보
 
 ```bash
 # ❌ 레포지토리 정보 하드코딩

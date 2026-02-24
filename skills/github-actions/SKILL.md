@@ -10,6 +10,8 @@ allowed-tools: Bash(gh release:*)
 
 # GitHub Actions
 
+> **참고:** GitHub Actions 워크플로우 실행 및 결과 조회, 이슈/PR 관리 등 `gh` CLI 관련 작업은 `github` 스킬을 함께 로드하여 참조한다.
+
 ## 주의 사항 (Anti-patterns)
 
 ### 1. 오래된 버전 사용
