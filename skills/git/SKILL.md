@@ -397,6 +397,20 @@ git push origin main    # 로컬 변경사항 푸시
 git push -f origin main # 강제 푸시 (⚠️ 위험 - 팀 작업 시 금지)
 ```
 
+## 주의 사항 (Anti-patterns)
+
+### 현재 디렉토리에서 불필요한 `git -C` 사용
+
+```bash
+# ❌ 현재 디렉토리가 대상 레포지토리인데 -C 옵션 사용
+git -C /path/to/current/repo log --oneline
+
+# ✅ 현재 디렉토리에서 바로 실행
+git log --oneline
+```
+
+현재 디렉토리가 작업 대상 레포지토리와 동일하면 `git -C` 옵션은 불필요한 중복이다. 다른 경로의 레포지토리를 대상으로 할 때만 사용한다.
+
 ## 보안 및 주의사항
 
 ### 절대 커밋하면 안 되는 파일
