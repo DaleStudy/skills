@@ -1,133 +1,146 @@
 ---
 name: mcp
-description: "MCP 서버 생성·구현 스킬. 다음 상황에서 사용: (1) 새 MCP 서버 프로젝트 생성할 때, (2) Tools/Resources/Prompts 정의·등록이 필요할 때, (3) stdio/SSE/HTTP 트랜스포트 설정 시, (4) MCP Inspector로 서버 테스트할 때"
+description: "mcp 서버 연결 문제를 분석하고 최신 specification 기준으로 구현을 검증한다. tools/list 또는 tools/call 오류, stdio sse http transport 이슈, resources prompts 라우팅 문제, inspector 기반 재현 테스트가 필요할 때 사용한다."
 license: MIT
-compatibility: Node/Python/기타 MCP SDK 지원 런타임
 metadata:
   author: DaleStudy
   version: "1.0.0"
-allowed-tools: Bash(npx:*) Bash(npm:*) Bash(bun:*) Bash(uv:*) Bash(cargo:*) Bash(dotnet:*)
 ---
 
-# MCP 서버 생성·구현
+# MCP 원인 분석·스펙 검증
 
-사용자의 요구사항을 기반으로 **MCP 서버 프로젝트를 생성하고**, 필요한 **Tools/Resources/Prompts를 등록**하며, **stdio 또는 SSE/HTTP 트랜스포트**로 실행 가능하게 구성하고, **MCP Inspector로 테스트**까지 완료한다.
+문제 재현, 최신 스펙과 구현 대조, 불일치 근거 정리, 수정 전/후 Inspector 검증
 
 ---
 
 ## 입력 요구사항 (Ask if missing)
 
-필수로 확인할 것:
+먼저 아래 3가지만 확인
 
-- 런타임: `Node(TypeScript)` or `Python`
-- 트랜스포트: `stdio` or `SSE/HTTP`
-- 구현할 Tool 목록:
+1. 작업 목적: `원인 분석` 또는 `스펙 검증`
+2. 대상 코드/서버 위치: repo path, package 이름, 실행 엔트리
+3. 런타임/transport: `Node(TypeScript)` or `Python`, `stdio` or `SSE/HTTP`
 
-  - name
-  - description
-  - inputSchema (필드명/타입/필수 여부)
-  - side effects 여부 (파일/삭제/배포/결제 등)
+필요할 때만 아래 항목 추가 확인
 
-선택 입력:
-
-- 서버 이름/버전
-- 배포 환경(로컬/원격)
-- 인증 필요 여부(API key 등)
+- 재현 절차: 에러 로그, 실패 요청/응답, 기대 동작
+- 점검 대상 Tool/Resource/Prompt 이름
+- 배포 환경/인증 정보(원격 호출 이슈일 때만)
 
 ---
 
 ## 의사결정 규칙
 
-- 사용자가 명시하지 않으면 기본값은:
-
-  - 런타임: **Node(TypeScript)**
-  - 트랜스포트: **stdio**
-
-- 원격 배포/브라우저 연동이 언급되면:
-
-  - 트랜스포트: **SSE/HTTP**
-
-- 로컬 Claude Desktop 연동이면:
-
-  - 트랜스포트: **stdio**
+1. 분석과 검증을 구현보다 우선
+2. 서버 신규 생성/스캐폴딩은 범위에서 제외
+3. 수정이 필요하면 기존 코드 기준 최소 변경으로 진행
+4. 확정 사실과 추정 가설 분리 기록
 
 ---
 
-## 안전 규칙 (Critical)
+## 안전 규칙
 
-### STDIO 로깅 규칙
+### STDIO 로깅
 
-- **stdio 트랜스포트에서는 stdout 출력 금지**
-- Node: `console.log()` 금지 → `console.error()`만 사용
-- Python: `print()` 금지 → `logging` 사용
+- stdio transport에서는 stdout 로그 출력 금지
+- Node에서는 `console.log()` 대신 `console.error()` 사용
+- Python에서는 `print()` 대신 `logging` 사용
 
-### 입력 검증 규칙
+### 입력/호출 검증
 
-- Tool handler는 실행 전에 반드시 입력 검증 수행
-- 파일 경로는 `../` 등 path traversal 차단
-- 외부 API 호출은 timeout 필수
+- 필수 입력 누락 여부 먼저 검증
+- Tool handler 실행 전 schema 검증 수행
+- 파일 경로 입력에서 path traversal(`../`) 차단
+- 외부 API 호출에 timeout 강제
 
 ---
 
-## 구현 절차 (Steps)
+## 실행 절차
 
-### Step 1. 프로젝트 스캐폴딩 생성
+### Step 1. 문제 재현
 
-- Node:
+- 최소 재현 시나리오 정의
+- 실패 지점을 transport, tools, resources, prompts로 분류
+- 재현 결과를 `확정 사실`과 `추정`으로 구분 기록
 
-  - `npm init -y`
-  - `@modelcontextprotocol/sdk`, `zod`, `tsx`, `typescript` 설치
-  - `src/server.ts` 생성
+### Step 2. 최신 스펙 기준 대조
 
-- Python:
+1. [MCP Specification](https://modelcontextprotocol.io/specification/latest) 먼저 확인
+2. [MCP SDKs](https://modelcontextprotocol.io/docs/sdk) 문서와 사용 중인 SDK 버전 대조
+3. 구현 코드와 스펙을 항목별로 1:1 매핑
+   - transport 초기화/연결 방식
+   - `tools/list`, `tools/call` 요청/응답 구조
+   - `resources/list`, `resources/read` 노출/조회 구조
+   - prompt 등록 이름, argument schema, handler 라우팅
+   - 응답 포맷 `content`, `isError`
+4. 불일치 발견 시 영향 범위와 수정 포인트 함께 정리
 
-  - `uv init`, `uv add mcp`
-  - `server.py` 생성
+### Step 3. 수정안 정리
 
-### Step 2. MCP 서버 기본 골격 생성
+- 원인별 수정 순서를 우선순위로 정리
+- 각 수정안의 영향 범위와 회귀 위험 명시
+- 테스트 가능한 검증 케이스 함께 제시
 
-- `McpServer(name, version)` 초기화
-- transport 연결 (stdio 기본)
+### Step 4. Inspector 검증
 
-### Step 3. Tools 등록
+- 수정 전/후 동일 시나리오로 결과 비교
+- 통과/실패 기준을 체크리스트로 기록
 
-각 Tool마다:
+---
 
-- registerTool / @mcp.tool() 적용
-- inputSchema 정의
-- handler 구현
-- 반환을 content 배열 형태로 고정
+## Resources / Prompts 검증 항목
 
-### Step 4. Resources/Prompts (요청 시)
+- `resources/list`가 기대한 리소스를 노출하는지 확인
+- `resources/read`가 실제 payload를 반환하는지 확인
+- prompt 등록 이름 충돌 여부 확인
+- prompt argument schema가 호출 payload와 일치하는지 확인
+- handler 누락 또는 라우팅 누락 여부 확인
 
-- SDK 제공 API로 등록
-- 최소 1개 샘플 등록
+---
 
-### Step 5. 실행 커맨드 제공
+## Inspector 테스트 체크리스트
 
-- dev 실행 방법 1개
-- 배포용 실행 방법 1개(가능하면)
+- [ ] 서버 실행 및 Inspector 연결 유지 기준을 만족하는가
+- [ ] `tools/list` 결과가 기대한 tool 노출 기준을 만족하는가
+- [ ] 대표 tool 1개 이상 `tools/call` 성공 기준을 만족하는가
+- [ ] 응답이 `content` / `isError` 구조 기준을 만족하는가
+- [ ] stdout 무오염 및 프로토콜 유지 기준을 만족하는가
+- [ ] 수정 전/후 결과 차이 검증 기준을 만족하는가
 
-### Step 6. MCP Inspector 테스트 가이드 제공
+---
 
-- tools/list 확인
-- tools/call 테스트 페이로드 제공
+## Error 반환 기준
+
+아래 조건 중 하나라도 해당하면 `isError: true`로 반환
+
+- 서버 실행 또는 연결 자체가 실패한 경우
+- 필수 입력 누락으로 검증을 진행할 수 없는 경우
+- 스펙 불일치가 확인된 경우
+- 재현 실패로 원인 확정이 불가능한 경우
+- 환경 제약으로 Inspector 테스트를 수행할 수 없는 경우
+
+Error 응답에는 최소한 다음 항목 포함
+
+1. 실패 단계
+2. 관측된 증상
+3. 필요한 추가 입력 또는 다음 조치
 
 ---
 
 ## 출력 계약 (Output Contract)
 
-이 스킬 실행 결과는 항상 아래를 포함해야 한다.
+항상 아래 순서로 결과 정리
 
-1. 생성된 파일 구조
-2. MCP 서버 코드 (완성본)
-3. 실행 커맨드
-4. Inspector 테스트 방법
-5. Claude Desktop 연동 예시(stdio일 때)
+1. 문제 요약과 재현 조건
+2. 확정 사실 / 추정 가설
+3. 스펙 대조 결과(일치/불일치)
+4. 수정 포인트와 영향 범위
+5. Inspector 전/후 검증 결과
+6. 남은 리스크와 후속 확인 항목
 
 ---
 
-## Tool 반환 포맷 (고정)
+## Tool 반환 포맷
 
 ### Success
 
@@ -145,27 +158,3 @@ allowed-tools: Bash(npx:*) Bash(npm:*) Bash(bun:*) Bash(uv:*) Bash(cargo:*) Bash
   "content": [{ "type": "text", "text": "..." }]
 }
 ```
-
----
-
-## 템플릿
-
-- `assets/server.node.ts` - Node(TypeScript)
-- `assets/server.python.py` - Python
-
----
-
-## Inspector 테스트 체크리스트
-
-- [ ] 서버 실행됨
-- [ ] tools/list에서 echo 노출됨
-- [ ] tools/call로 입력 전달 시 정상 응답
-- [ ] stdout 오염 없음(로그가 stderr로만 출력됨)
-
----
-
-## 참고
-
-- [MCP Quickstart](https://modelcontextprotocol.io/quickstart) – 서버 생성 절차
-- [MCP Specification](https://modelcontextprotocol.io/specification/latest) – Tools/Resources/Prompts 스펙
-- [MCP SDKs](https://modelcontextprotocol.io/docs/sdk) – Node, Python 등 SDK
