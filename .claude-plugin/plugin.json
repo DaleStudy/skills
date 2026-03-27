@@ -1,0 +1,8 @@
+{
+  "name": "dalestudy-skills",
+  "description": "General development skills: Bun, Git, GitHub, GitHub Actions, React, Skill Creator, Storybook, Testing, TypeScript",
+  "version": "1.0.0",
+  "author": {
+    "name": "DaleStudy"
+  }
+}
