@@ -117,6 +117,7 @@ npx skills add dalestudy/skills --skill bun
 ## Current Skills
 
 - **bun**: Node.js 대신 Bun 런타임 사용
+- **cloudflare**: Cloudflare 사용 규칙 (Workers 배포, 시크릿 관리)
 - **git**: Git 버전 관리 모범 관례 및 워크플로우
 - **github-actions**: GitHub Actions 워크플로우 작성 및 보안
 - **mcp**: MCP(Model Context Protocol) 서버 생성·구현
