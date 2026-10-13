@@ -50,6 +50,29 @@ npx skills add dalestudy/skills --skill bun
 
 ---
 
+### [cloudflare](skills/cloudflare)
+
+DaleStudy의 Cloudflare 사용 규칙
+
+**주요 기능:**
+
+- GitHub Actions(`wrangler-action`) 배포, Workers Builds 미사용
+- GitHub secret을 원본으로 두고 `--secrets-file`로 주입
+- 공유 워크플로우로 PR 미리보기
+- `wrangler secret put` 같은 안티 패턴
+
+**언제 활성화되나요?**
+
+- `wrangler.jsonc`, 배포 워크플로우 작업 시
+- Worker에 시크릿이나 환경 변수를 추가할 때
+- `wrangler`, `Workers`, `secret put`, `Workers Builds` 키워드 포함 작업 시
+
+```bash
+npx skills add dalestudy/skills --skill cloudflare
+```
+
+---
+
 ### [git](skills/git)
 
 Git 버전 관리 모범 관례 및 워크플로우 가이드
