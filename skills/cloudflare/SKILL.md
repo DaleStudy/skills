@@ -1,11 +1,11 @@
 ---
 name: cloudflare
-description: "DaleStudy 조직의 Cloudflare 사용 규칙 (Workers 배포, 시크릿 관리, PR 미리보기). 다음 상황에서 사용: (1) wrangler.jsonc 또는 wrangler.toml 작업 시, (2) Worker 배포 워크플로우(deploy.yml, preview.yml) 작성·수정 시, (3) Worker에 시크릿이나 환경 변수를 추가·변경할 때, (4) PR 미리보기 설정 시, (5) 'Cloudflare', 'wrangler', 'Workers', 'secret put', 'Workers Builds', 'wrangler-action' 키워드가 포함된 작업 시"
+description: "DaleStudy 조직의 Cloudflare 사용 규칙 (Workers 배포, 시크릿 관리, PR 미리보기, URL 형식). 다음 상황에서 사용: (1) wrangler.jsonc 또는 wrangler.toml 작업 시, (2) Worker 배포 워크플로우(deploy.yml, preview.yml) 작성·수정 시, (3) Worker에 시크릿이나 환경 변수를 추가·변경할 때, (4) PR 미리보기 설정 시, (5) 페이지 URL·트레일링 슬래시·canonical·sitemap 작업 시, (6) 'Cloudflare', 'wrangler', 'trailing slash', 'html_handling', 'Workers', 'secret put', 'Workers Builds', 'wrangler-action' 키워드가 포함된 작업 시"
 license: MIT
 compatibility: Requires wrangler CLI
 metadata:
   author: DaleStudy
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Cloudflare
@@ -120,3 +120,19 @@ wrangler secret put FOO_API_KEY
 - ❌ 공개 값(Client ID 등)을 secret으로 두기 - `vars`로 충분하다
 
 > 참고: [GitHub Actions로 배포](https://developers.cloudflare.com/workers/ci-cd/external-cicd/github-actions/), [wrangler deploy](https://developers.cloudflare.com/workers/wrangler/commands/workers/#deploy)
+
+## URL 형식 (트레일링 슬래시)
+
+DaleStudy 사이트의 정규 URL은 **슬래시 없는 형태**다 (`/about`, 도메인 루트 `/`만 예외). API·웹훅·OAuth 콜백 경로가 모두 이 형태로 외부에 등록되어 있고, 앱 프레임워크(TanStack, React Router)도 이 형태로 링크를 만들기 때문이다.
+
+정적 파일로 서빙하는 페이지는 Cloudflare 기본값이 `about/index.html`을 `/about/`에서 서빙하므로, 설정으로 맞춘다.
+
+| 구성 | 설정 |
+| --- | --- |
+| Workers 정적 에셋 (prerender, SPA, Astro 모두) | `wrangler.jsonc`의 `assets.html_handling: "drop-trailing-slash"` |
+| Astro | 위 설정과 함께 `astro.config.mjs`에 `trailingSlash: "never"`, `build: { format: "file" }` |
+| TanStack Start·Router, React Router (SSR) | 기본값 그대로 |
+
+- canonical, sitemap, 내부 링크는 모두 슬래시 없는 형태로 쓴다.
+- Workers 정적 에셋의 리다이렉트는 307(임시)이고 바꿀 수 없다. 리다이렉트가 일어날 일 자체를 줄이도록 링크를 정규 형태로 맞춘다.
+- 확인: `curl -s -o /dev/null -w '%{http_code} %{redirect_url}\n'`로 주요 페이지를 두 형태로 요청해, 슬래시 없는 쪽만 200이고 슬래시 있는 쪽은 그쪽으로 리다이렉트되는지 본다.
