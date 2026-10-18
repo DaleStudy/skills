@@ -36,10 +36,7 @@ bunx skills add . --skill bun --agent claude-code --global --yes
 
 GitHub Actions가 자동으로 실행됨 (스케줄: 매일 11:00, 23:00 UTC):
 
-- 모든 스킬의 설치 가능성 검증
-- `.github/workflows/ci.yml`의 `matrix.skill` 배열에 명시된 스킬만 테스트 대상
-
-**새 스킬 추가 시 CI 업데이트 필수**: `matrix.skill` 배열에 스킬명 추가
+- `skills/` 아래 모든 스킬의 설치 가능성 검증 (스킬을 추가해도 CI를 고칠 필요 없음)
 
 ## Repository Architecture
 
@@ -111,8 +108,7 @@ npx skills add dalestudy/skills --skill bun
 
 1. SKILL.md frontmatter 형식 검증
 2. `description` 필드의 활성화 조건 명확성 확인
-3. `.github/workflows/ci.yml`의 `matrix.skill` 배열 업데이트
-4. `dist/` 디렉토리에 `.skill` 파일 생성
+3. `dist/` 디렉토리에 `.skill` 파일 생성
 
 ## Current Skills
 
@@ -132,13 +128,12 @@ npx skills add dalestudy/skills --skill bun
 
 모든 PR에서 `.github/workflows/claude-code-review.yml` 워크플로우가 자동으로:
 
-1. **skill-creator 설치**: `npx skills add . --skill skill-creator --agent claude-code --global --yes` 실행
+1. **skill-creator 설치**: `npx skills add dalestudy/skills@skill-creator --agent claude-code --yes` 실행 (PR이 아니라 `main`의 skill-creator로 검증)
 2. **Claude Code 자동 활성화**: SKILL.md 변경 시 skill-creator의 `description` 매칭으로 자동 로드
 3. **검증 수행** (SKILL.md 변경 시):
    - ✅ Frontmatter YAML 문법 정확성
    - ✅ `name` 필드와 디렉토리명 일치
    - ✅ `description` 필드에 트리거 조건 포함 여부
-   - ✅ `.github/workflows/ci.yml`의 `matrix.skill` 배열 업데이트 확인
    - ✅ 네이밍 규칙 (소문자, 하이픈, 최대 64자)
 
 ### 테스트 방법
@@ -161,11 +156,10 @@ gh pr create --title "test: Skill validation workflow" \
   --body "Testing skill-creator integration in GitHub App"
 ```
 
-**기대 결과:** Claude Code가 PR에 `description` 필드 부족 및 CI matrix 누락을 지적하는 코멘트 생성
+**기대 결과:** Claude Code가 PR에 `description` 필드의 트리거 조건 누락을 지적하는 코멘트 생성
 
 ## Important Notes
 
-- **스킬 추가 후 CI 업데이트 필수**: `.github/workflows/ci.yml`의 `matrix.skill` 배열에 새 스킬명 추가
 - **SKILL.md만 수정하면 됨**: 빌드 과정 없음, 변경사항은 즉시 반영됨
 - **`description` 작성이 핵심**: AI 에이전트가 올바른 상황에서 스킬을 활성화하도록 구체적으로 기술
 - **GitHub App 자동 검증**: SKILL.md 변경 시 skill-creator가 자동으로 PR 리뷰에서 검증 수행
