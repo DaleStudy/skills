@@ -126,7 +126,7 @@ npx skills add dalestudy/skills --skill bun
 
 ### 자동 스킬 검증
 
-모든 PR에서 `.github/workflows/claude-code-review.yml` 워크플로우가 자동으로:
+`skills/**/SKILL.md`를 바꾼 PR에서 `.github/workflows/claude-code-review.yml` 워크플로우가 자동으로:
 
 1. **skill-creator 설치**: `npx skills add dalestudy/skills@skill-creator --agent claude-code --yes` 실행 (PR이 아니라 `main`의 skill-creator로 검증)
 2. **Claude Code 자동 활성화**: SKILL.md 변경 시 skill-creator의 `description` 매칭으로 자동 로드

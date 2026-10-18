@@ -3,10 +3,11 @@ name: Claude Code Review
 on:
   pull_request:
     types: [opened, synchronize, ready_for_review, reopened]
+    paths:
+      - "skills/**/SKILL.md"
 
 jobs:
   claude-review:
-    # code-review 플러그인은 draft PR을 리뷰하지 않으므로 아예 돌리지 않는다
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     permissions:
@@ -19,14 +20,30 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
+      # PR이 바꾼 skill-creator가 아니라 main의 skill-creator 기준으로 검증한다
       - name: Install skill-creator
         run: npx skills add dalestudy/skills@skill-creator --agent claude-code --yes
 
-      - name: Run Claude Code Review
-        id: claude-review
+      - name: Review SKILL.md changes
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
-          plugins: "code-review@claude-code-plugins"
-          prompt: "/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }} --comment Review for SKILL.md changes using the skill-creator skill"
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            이 PR에서 바뀐 `skills/**/SKILL.md` 파일을 skill-creator 스킬의 규칙으로 검증하라.
+            PR 브랜치는 현재 작업 디렉터리에 체크아웃되어 있다.
+
+            확인할 것:
+            - frontmatter YAML 문법, `name`과 디렉터리명 일치, 네이밍 규칙(소문자·숫자·하이픈, 64자 이하)
+            - `description`에 트리거 조건("다음 상황에서 사용: (1) …")이 있는가
+            - SKILL.md를 바꿨으면 `metadata.version`을 올렸는가, 올린 폭(MAJOR/MINOR/PATCH)이 변경 내용에 맞는가
+            - 새 스킬이면 README.md와 AGENTS.md의 스킬 목록에도 추가했는가
+            - 지시사항이 서로 모순되거나 사실과 다른 내용이 있는가
+
+            결과는 한국어로 남긴다:
+            - 특정 줄의 문제는 인라인 댓글로 남기고, 고칠 내용이 명확하면 suggestion 블록을 붙인다
+            - 마지막에 `gh pr comment`로 요약 댓글을 하나 남긴다. 문제가 없으면 "skill-creator 기준으로 검증했고 문제를 찾지 못했습니다."라고 쓴다
+          claude_args: |
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
