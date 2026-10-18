@@ -5,7 +5,7 @@ license: MIT
 compatibility: Git repository with skills/ directory
 metadata:
   author: DaleStudy
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Skill Creator for DaleStudy
@@ -87,18 +87,6 @@ description: "Bun 관련 스킬"  # 트리거 조건 없음
 - **bun**: Node.js 대신 Bun 런타임 사용
 - **github-actions**: GitHub Actions 워크플로우 작성 및 보안
 - **{new-skill}**: {간단한 설명} <!-- 추가 -->
-```
-
-### 4. 워크플로우 매트릭스 업데이트
-
-`.github/workflows/ci.yml`의 matrix에 새 스킬 추가:
-
-```yaml
-matrix:
-  skill:
-    - bun
-    - github-actions
-    - { new-skill } # 추가
 ```
 
 ## 기존 스킬 참고
