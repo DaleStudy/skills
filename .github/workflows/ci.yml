@@ -17,11 +17,11 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install all skills (local)
         run: |
-          npx skills@1.4.0 add . --yes
+          npx skills add . --yes
           echo "✅ Successfully installed all skills from local repository"
 
       - name: Verify all skill files
