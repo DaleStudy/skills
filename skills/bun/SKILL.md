@@ -116,3 +116,5 @@ bun run dev
 - run: bun install
 - run: bun test
 ```
+
+- 패키지 설치는 `npm install` 대신 `bun add`를 쓴다.
