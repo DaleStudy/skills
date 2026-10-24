@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires wrangler CLI
 metadata:
   author: DaleStudy
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Cloudflare
@@ -51,6 +51,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    environment:
+      name: production
+      url: https://example.dalestudy.com
     steps:
       - uses: actions/checkout@v{N}
       - uses: oven-sh/setup-bun@v{N}
@@ -74,7 +77,7 @@ jobs:
 
 ### PR 미리보기
 
-조직 공유 워크플로우를 부른다. PR마다 Workers Previews(`wrangler preview --name pr-<번호>`)로 미리보기를 띄우고 PR에 주소를 댓글로 남기며, PR이 닫히면 지운다.
+PR마다 Workers Previews(`wrangler preview --name pr-<번호>`)로 미리보기를 띄운다. 주소는 job의 `environment`로 GitHub 배포에 기록되어 PR 타임라인에 "deployed to previews"와 View deployment 버튼으로 나타난다. 댓글을 달지 않고, 오래된 미리보기는 Cloudflare가 Worker당 개수 제한에 맞춰 정리하므로 지우지 않는다.
 
 ```yaml
 # .github/workflows/preview.yml
@@ -82,7 +85,6 @@ name: Preview 🔍
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, closed]
 
 concurrency:
   group: preview-${{ github.event.pull_request.number }}
@@ -94,15 +96,34 @@ jobs:
     if: >
       github.event.pull_request.head.repo.full_name == github.repository &&
       github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
-    uses: DaleStudy/.github/.github/workflows/workers-preview.yml@main
-    secrets:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    # 미리보기 주소는 GitHub 배포(previews 환경)로 PR에 표시된다. 오래된 미리보기는 Cloudflare가 정리한다
+    environment:
+      name: previews
+      url: ${{ steps.preview.outputs.preview-url }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install --frozen-lockfile
+
+      - run: bun run build
+
+      - name: Deploy preview
+        id: preview
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          packageManager: bun
+          command: preview --name pr-${{ github.event.pull_request.number }} --ignore-base-config
 ```
 
-미리보기는 운영 설정을 상속하지 않는다. `wrangler.jsonc`에 `previews` 블록을 두고, 미리보기에 필요한 `vars`와 바인딩을 다시 적는다. 필요한 게 없으면 빈 블록(`"previews": {}`)을 둔다. 운영 D1을 미리보기와 같이 써도 되면 같은 데이터베이스를 바인딩하고, 분리해야 하면 미리보기용 D1을 따로 둔다 ([feedback](https://github.com/DaleStudy/feedback/blob/main/.github/workflows/preview.yml) 참고). 미리보기에는 운영 시크릿도 들어가지 않는다. 미리보기에 시크릿이 필요하면 공유 워크플로우 대신 `wrangler preview --secrets-file`로 넣는다 (feedback 참고). Workers Previews는 wrangler 4.135.0 이상이 필요하다.
+운영 배포 job에도 `environment: { name: production, url: <운영 주소> }`를 두면 저장소의 Deployments 탭에서 두 환경의 이력을 함께 볼 수 있다.
+
+미리보기는 운영 설정을 상속하지 않는다. `wrangler.jsonc`에 `previews` 블록을 두고, 미리보기에 필요한 `vars`와 바인딩을 다시 적는다. 필요한 게 없으면 빈 블록(`"previews": {}`)을 둔다. 운영 D1을 미리보기와 같이 써도 되면 같은 데이터베이스를 바인딩하고, 분리해야 하면 미리보기용 D1을 따로 둔다 ([feedback](https://github.com/DaleStudy/feedback/blob/main/.github/workflows/preview.yml) 참고). 미리보기에는 운영 시크릿도 들어가지 않는다. 미리보기에 시크릿이 필요하면 `wrangler preview --secrets-file`로 넣는다 (feedback 참고). wrangler 4.136.3 이상이 필요하다 (wrangler-action의 `preview-url` 출력).
 
 `versions upload`로 미리보기를 만들지 않는다. 운영 Worker에 배포되지 않은 버전이 쌓여, `secrets:` 입력으로 배포할 때 `code 10214`로 실패한다.
 
