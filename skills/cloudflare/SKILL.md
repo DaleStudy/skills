@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires wrangler CLI
 metadata:
   author: DaleStudy
-  version: "1.2.0"
+  version: "1.2.1"
 ---
 
 # Cloudflare
@@ -104,9 +104,9 @@ jobs:
       name: previews
       url: ${{ steps.preview.outputs.preview-url }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v{N}
 
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@v{N}
 
       - run: bun install --frozen-lockfile
 
@@ -114,7 +114,7 @@ jobs:
 
       - name: Deploy preview
         id: preview
-        uses: cloudflare/wrangler-action@v4
+        uses: cloudflare/wrangler-action@v{N}
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           packageManager: bun
