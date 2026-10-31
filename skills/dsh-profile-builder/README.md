@@ -60,7 +60,7 @@ cd ~/.dsh/skills/dsh-profile-builder
 node scripts/selftest.mjs
 ~~~
 
-期望 38/38 通过（完全离线）。
+期望 39/39 通过（完全离线）。
 
 ## 快速开始
 
@@ -125,7 +125,7 @@ dsh-profile-builder/
 │   ├── mode-base.mjs        # 模式：extract / emit / verify / replay / refresh
 │   ├── export.mjs           # W3：生成迁移包 + manifest.json
 │   ├── import.mjs           # W3：校验并导入迁移包
-│   └── selftest.mjs         # L3：38 项离线自测
+│   └── selftest.mjs         # L3：39 项离线自测
 └── tests/
     └── fixtures/            # dump-web.txt / dump-ptc-moved.txt，离线夹具
 ~~~
@@ -137,7 +137,7 @@ dsh-profile-builder/
 | L0 | static-check：package.json / patch / 纯净 / 迁移白名单 / 模式账本 | exit 0 | 应用运行时是否真的加载 |
 | L1 | dump：真实 CLI 装配输出 | exit 0、stderr 空、必需行齐全、无 skip/incompatible、模式 MODE-SHA | 是否长期稳定、UI 交互 |
 | L2 | 隔离 DSH_HOME 冒烟或 dsh-lab profile + 用户 UI 确认 | stdout 出现 dsh web URL、stderr 空；用户确认模式可见 | onboarding、长期使用 |
-| L3 | selftest 负例矩阵（29 例） | 38/38 离线通过 | 真实用户环境的所有边界 |
+| L3 | selftest 负例矩阵（30 例） | 39/39 离线通过 | 真实用户环境的所有边界 |
 
 纪律：dump 通过 ≠ 已启动；未做的层必须写"未验证"。完整矩阵与失败处置见 references/30-verification.md。
 

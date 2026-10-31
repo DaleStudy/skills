@@ -166,6 +166,12 @@ export function runStaticCheck(profileDir, opts) {
     checks.push({ id: 'PROFILE-GENERATED-PRESENT', ok: true, detail: 'generated artifacts present (expected on a live profile, never exported): ' + generated.join(', ') });
   }
 
+  // ---- clone-of-desktop residue (RED baseline lesson: never copy desktop's overlay) ----
+  var desktopOverlay = rootEntries.filter(function (n) { return /^desktop-next\..*\.json$/.test(n); });
+  if (path.basename(absDir) !== 'desktop' && desktopOverlay.length) {
+    check('PROFILE-DESKTOP-OVERLAY', false, 'warn', 'desktop overlay files present in a non-desktop profile: ' + desktopOverlay.join(', ') + ' (desktop-only config; a fresh profile must come from the official template, and export never packs these)');
+  }
+
   // ---- agent modes (5th-mode extension) ----
   var modes = [];
   if (patchText) {

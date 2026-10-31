@@ -1,7 +1,7 @@
 # 参考 50：发布与分发（DaleStudy/skills 上游 + 本机安装）
 
 日期 2026-10-31。适用：A2（发布）与 W3 之外的技能分发场景。
-前提：A1 技能自检全部通过（见 30-verification.md §7 A1），尤其 selftest 38/38 与 frontmatter 合法。
+前提：A1 技能自检全部通过（见 30-verification.md §7 A1），尤其 selftest 39/39 与 frontmatter 合法。
 
 ## 1 上游仓库约定（DaleStudy/skills）
 
@@ -64,7 +64,7 @@ cd ~/.dsh/skills/dsh-profile-builder
 node -e 'const fs=require("fs");const t=fs.readFileSync("SKILL.md","utf8");const m=t.match(/^---\n([\s\S]*?)\n---/);if(!m)throw new Error("no frontmatter");const fm=m[1];if(!/^name: dsh-profile-builder$/m.test(fm))throw new Error("bad name");const d=fm.match(/^description: (.*)$/m);if(!d)throw new Error("no description");if(d[1].length>1024)throw new Error("description too long: "+d[1].length);console.log("frontmatter OK")'
 wc -l SKILL.md
 grep -rnE 'T[O]DO|T[B]D|占[位]|待[补]' SKILL.md references README.md || echo 'no placeholders'
-# 离线自测（必须 38/38）
+# 离线自测（必须 39/39）
 node scripts/selftest.mjs
 ~~~
 
@@ -174,13 +174,13 @@ PR 描述模板（写入 /tmp/dsh-profile-builder-pr.md）：
 - W1 create / W2 adopt / W3 migrate / W4 upgrade / W5 doctor / W6 mode
 - 强制先访谈取证、产 ≤5 行契约并获确认后才写盘
 - 只读 desktop profile：不修改、不切换
-- 离线自测 38 项 + 负例矩阵 + L0–L3 分层验收
+- 离线自测 39 项 + 负例矩阵 + L0–L3 分层验收
 
 ## 目录
 skills/dsh-profile-builder/{SKILL.md, README.md, references/, scripts/, tests/fixtures/}
 
 ## 验收证据
-- node scripts/selftest.mjs -> 38/38 passed（附输出）
+- node scripts/selftest.mjs -> 39/39 passed（附输出）
 - 在本机 DSH NEXT（2026-10-31 版本）上完成：创建 profile、导出/导入迁移包、第 5 模式 Phase A/B、dump L1、隔离 DSH_HOME L2 冒烟
 - 负例矩阵见 references/30-verification.md §5
 
@@ -193,7 +193,7 @@ skills/dsh-profile-builder/{SKILL.md, README.md, references/, scripts/, tests/fi
 - [x] frontmatter name 与目录名一致，description ≤1024
 - [x] references 索引齐全，正文 ≤500 行
 - [x] 无未完成标记；无真实凭据与机器绝对路径（系统默认应用路径除外）
-- [x] selftest 38/38；npx 安装验证通过
+- [x] selftest 39/39；npx 安装验证通过
 - [x] 根 README 技能列表已更新（若上游要求）
 ~~~
 

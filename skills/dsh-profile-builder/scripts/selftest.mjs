@@ -573,6 +573,14 @@ test('cli: export.mjs + import.mjs roundtrip standalone', function () {
   assertEq(data.packageName, 'dsh-profile-cli-profile', 'cli package name');
 });
 
+test('static-check: desktop overlay residue in a custom profile is a warning', function () {
+  // RED baseline lesson: the no-skill agent cloned desktop and copied desktop-next.*.json along with it.
+  const dir = writeProfile(tmpDir('desktop-clone'), { extra: { 'desktop-next.cordis.patch.json': '{}\n', 'desktop-next.runtime.patch.json': '{}\n' } });
+  const r = runStaticCheck(dir, {});
+  assertOk(r);
+  assert(r.warnings.some(function (w) { return w.id === 'PROFILE-DESKTOP-OVERLAY'; }), 'expected PROFILE-DESKTOP-OVERLAY warning');
+});
+
 // ============================== main ==============================
 
 function main() {

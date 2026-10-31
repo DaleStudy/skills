@@ -89,7 +89,7 @@ node scripts/dump.mjs --profile <name> --raw-out /tmp/<name>-dump.yml
 | `scripts/mode-base.mjs` | 第 5 模式基线/账本 | 子命令 `extract` / `emit` / `verify` / `replay` / `refresh`，见 `references/60-agent-modes.md` |
 | `scripts/export.mjs` | 打迁移包 | `--profile-dir <dir> --out <dir> [--force] [--runtime-version <v>]` |
 | `scripts/import.mjs` | 落迁移包 | `--from <package-dir> --profile-name <name> [--dsh-home <dir>] [--dry-run] [--install]` |
-| `scripts/selftest.mjs` | 全离线回归（38 项） | `node scripts/selftest.mjs`（无 app、无网络） |
+| `scripts/selftest.mjs` | 全离线回归（39 项） | `node scripts/selftest.mjs`（无 app、无网络） |
 
 必备环境变量/路径：`DSH_APP`（默认 `/Applications/DSH NEXT.app`）、`DSH_HOME`（默认 `~/.dsh`）、bin=`Contents/MacOS/DSH NEXT`、cli=`Contents/Resources/app.asar/lib/desktop-cli.js`。任何 dsh 调用都必须带 `ELECTRON_RUN_AS_NODE=1` 与 `--expose-internals`。
 
@@ -102,7 +102,7 @@ node scripts/dump.mjs --profile <name> --raw-out /tmp/<name>-dump.yml
 | **L0** 静态 | `static-check`（+ 打包时 `--migration`） | 退出码 0；无纯度/结构错误 |
 | **L1** 权威 | `dump.mjs`（真实 app.asar 跑 `--dump-config`） | 退出码 0、stderr 空、必需行齐全、无 skip/incompatible 标记；模式再加 MODE-SHA |
 | **L2** 运行级 | 复制到隔离 `DSH_HOME` 冒烟启动 / 真实验收 profile `dsh-lab`（保留不激活） | 启动成功并打印 `dsh web: http://...`；模式可见性由用户 UI 亲眼确认 |
-| **L3** 负例回归 | `selftest.mjs` + 负例矩阵（见 references/30-verification.md） | 38/38 通过；每个负例得到预期错误 id |
+| **L3** 负例回归 | `selftest.mjs` + 负例矩阵（见 references/30-verification.md） | 39/39 通过；每个负例得到预期错误 id |
 
 **正式验收 A1–A5**：A1 技能形式（frontmatter/≤500 行/描述含触发词/version 递增）；A2 发布（fork + `npx skills add` 预验收 + PR）；A3 运行（沙箱正负例 + `dsh-lab` 保留不激活 + 不切 desktop）；A4 TDD 证据（RED/GREEN/REFACTOR 记录 + selftest 输出）；A5 第 5 模式全链路（insert 与账本通过 L0、dump 出模式行、Phase A 插件与官方 PTC 逐字相同、重放一致、冲突有预期错误、UI 可见）。任何未做项必须写进"未验证"清单。
 

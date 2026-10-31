@@ -9,7 +9,7 @@
 | **L0** 静态 | 结构/纯度/模式账本离线检查 | `node scripts/static-check.mjs` | 退出码 0，无 error | 不能证明能被 DSH 加载 |
 | **L1** 权威 | 用真实 app.asar 跑 `--dump-config` 检查组合结果 | `node scripts/dump.mjs` | 退出码 0、stderr 空、必需行齐全、模式 sha 对齐、无 skip/incompatible 标记 | 不能证明能启动 |
 | **L2** 运行级 | 隔离 DSH_HOME 冒烟启动 / 真实验收 profile / 用户 UI 确认 | 见 §4 | 启动成功并输出 `dsh web: http://...`；模式用户亲眼看到 | 不能证明交互流程与长期稳定 |
-| **L3** 负例回归 | 38 项离线 selftest + 负例矩阵 | `node scripts/selftest.mjs` + §5 | 38/38 通过；每个负例得到预期错误 id/文本 | 不能替代 L1/L2 |
+| **L3** 负例回归 | 39 项离线 selftest + 负例矩阵 | `node scripts/selftest.mjs` + §5 | 39/39 通过；每个负例得到预期错误 id/文本 | 不能替代 L1/L2 |
 
 另外 `scripts/selftest.mjs` 是**全离线**回归（不启动 DSH、不联网），可直接作为 L3 主证据；`tests/fixtures/` 目前只有 `dump-web.txt` 与 `dump-ptc-moved.txt`，其余 fixture 由 selftest 自己构造。
 
@@ -167,6 +167,7 @@ kill "$PID"
 | 包内出现 secret 形态值 | static-check | exit 1，`PURITY-NO-SECRET` | selftest #4 |
 | 包内出现本机绝对路径 | static-check | exit 1，`PURITY-NO-MACHINE-PATH` | selftest #5 |
 | literal credential 值 | static-check | warn `PURITY-PLAINTEXT-CREDENTIAL-KEY`（交人工） | selftest #6 |
+| 非 desktop profile 出现 desktop overlay 文件 | static-check | warn `PROFILE-DESKTOP-OVERLAY`（clone desktop 的残留信号） | selftest #39 |
 | 迁移包含非白名单根条目 | static-check --migration | exit 1，`MIGRATION-CLEAN` | selftest #7 |
 | 迁移包含 cordis.yml/node_modules | static-check --migration | exit 1，`MIGRATION-NO-GENERATED` | selftest #8 |
 | 模式 id 用保留名 / order<5 | emit | exit 1，`MODE-RESERVED-ID` / `MODE-ORDER` | selftest #9/#14 |
@@ -238,7 +239,7 @@ cp -a /tmp/<name>-backup-<ts> "$DSH_HOME/profiles/<name>"
 | 版本递增 | `metadata.version`；与 git 上一版对比 | 每次编辑 SKILL.md 必须 bump（SemVer） |
 | references 完整 | `ls references/` | 00-facts / 10-interview-tree / 20-workflows / 30-verification / 40-migration / 50-publish / 60-agent-modes 都在且被索引 |
 | 无未完成标记 | `grep -RniE "T[O]DO|T[B]D|占[位]|待[补]"` | 无（"未验证"标注除外） |
-| 脚本可解释 | `node scripts/selftest.mjs` | 38/38，exit 0 |
+| 脚本可解释 | `node scripts/selftest.mjs` | 39/39，exit 0 |
 
 ### A2 · 发布
 
@@ -261,7 +262,7 @@ cp -a /tmp/<name>-backup-<ts> "$DSH_HOME/profiles/<name>"
 1. **RED**：在没有本技能的情况下，让子代理执行一个压力场景（例如"帮我做个 dsh profile"），记录它暴露的失败行为（跳过访谈直接写、clone desktop、把 dump 当只读…）——原文摘录。
 2. **GREEN**：加载本技能重跑同一场景，行为达标（先访谈、给契约、等确认、按 W1 执行）。
 3. **REFACTOR**：若 GREEN 里出现新借口/漏洞，补进 SKILL.md 的"常见错误"或硬门，再重测。
-4. **脚本级**：`node scripts/selftest.mjs` 输出 38 passed, 0 failed（离线可复现）。
+4. **脚本级**：`node scripts/selftest.mjs` 输出 39 passed, 0 failed（离线可复现）。
 5. 证据保存：放 `tests/` 或交付报告附录，注明日期与场景。
 
 ### A5 · 第 5 模式全链路
@@ -292,7 +293,7 @@ cp -a /tmp/<name>-backup-<ts> "$DSH_HOME/profiles/<name>"
 | L0 | 是/否 | ... | 通过/未做 |
 | L1 | 是/否 | ... | 通过/未做 |
 | L2 | 是/否 | ... | 通过/未做/用户未确认 |
-| L3 | 是/否 | selftest 38/38 | 通过/未做 |
+| L3 | 是/否 | selftest 39/39 | 通过/未做 |
 
 - 回滚点：<.bak-<ts> / profile 备份路径 / recovery 快照 / 不适用>
 - 未验证：<逐条>
