@@ -274,9 +274,19 @@ cp -a /tmp/<name>-backup-<ts> "$DSH_HOME/profiles/<name>"
 | 3 | Phase A 插件逐字相同 | `dump --mode` | 插件 sha == 官方 PTC 基线 sha（MODE-SHA 通过） |
 | 4 | 重放一致 | `mode-base verify` | VERIFY-SHA / VERIFY-SHA-DECLARED 通过（官方基线 + ops == patch） |
 | 5 | 冲突有预期错误 | refresh/replay 负例 | `OPS-LEDGER-MISMATCH` / `BASELINE-SHA` 等按预期报错 |
-| 6 | UI 可见 | 用户亲手操作 | 选择器出现新模式/分组；新会话默认仍 standard（用户确认） |
+| 6 | UI 可见 | 用户亲手操作，且必须在该 profile 的 host 里 | 该 profile 下选择器出现新模式/分组；新会话默认仍 standard（用户确认） |
 | 7 | 迁移后仍通过 | export → import → `mode-base verify` | 目标机 verify 通过、dump 通过 |
 | 8 | 多模式（如有） | `static-check` | id 与 order 唯一、order ≥5 |
+
+**UI 可见性的判据边界（实测，勿误判）**：新会话的预设 chip 列的是**当前运行 host / profile 的 preset roster**，不是账号级全局列表。同一个 profile 里注册的模式，在该 profile 起的 host 下必然可见；桌面 App 若仍运行在别的 profile（默认 `desktop`），就看不到它——这是 profile 隔离，不是注册失败。
+
+复现（真实 home，不切桌面）：
+```bash
+DSH_HOME=$HOME/.dsh ELECTRON_RUN_AS_NODE=1 "/Applications/DSH NEXT.app/Contents/MacOS/DSH NEXT" --expose-internals \
+  "/Applications/DSH NEXT.app/Contents/Resources/app.asar/lib/desktop-cli.js" --profile <name> --no-open --port <port>
+# 浏览器打开打印出的 http://127.0.0.1:<port>/?token=… → 新建会话 → 点「标准模式」chip → 应看到自定义模式
+```
+验收记录必须写清**在哪个 profile 的 host 下看到**；只写"UI 没出现"会把隔离误判成失败。
 
 ## 8. 验收报告模板
 

@@ -5,7 +5,7 @@ license: MIT
 compatibility: "Requires DSH (DeepSeek Harness) with $DSH_HOME/profiles; Node.js 20+; macOS or Linux"
 metadata:
   author: DaleStudy
-  version: "1.0.0"
+  version: "1.0.1"
 allowed-tools: Bash(node:*) Bash(pnpm:*) Bash(npx:*) Bash(dsh:*) Bash(git:*) Bash(gh:*) Bash(mkdir:*) Bash(cp:*) Bash(ls:*) Bash(cat:*)
 ---
 
@@ -139,6 +139,7 @@ node scripts/dump.mjs --profile <name> --raw-out /tmp/<name>-dump.yml
 - Phase B 定制后直接 `dump --mode` 会误报 `MODE-SHA`：先 `mode-base replay` 生成期望基线，再 `dump --baseline`（见 30-verification）。
 - 目标机没启动过 DSH 就 import：没有 `profiles/` 目录，`IO-DSH-HOME` 报错；先启动一次桌面。
 - 把 L1 dump 通过写成"已验证/可启动"：验收报告必须区分。
+- 在 desktop（或别的）profile 的桌面里找不到自定义模式：新会话的预设 chip 只列**当前运行 profile** 的 roster；先确认你是在**注册了该模式的那个 profile** 里看（桌面：菜单栏 `DSH NEXT → Profile：…` 切换后重开；CLI：`--profile <name>`）。在别的 profile 下看不到不是"注册失败"。
 
 ## 10. 完成判据（向用户报告前自检）
 

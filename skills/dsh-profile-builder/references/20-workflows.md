@@ -324,7 +324,7 @@ node scripts/static-check.mjs --profile-dir "$DSH_HOME/profiles/<name>"
 node scripts/dump.mjs --profile <name> --mode <modeId> --profile-dir "$DSH_HOME/profiles/<name>"
 ```
 
-Phase A 通过判据：verify 全绿；static-check 退出码 0；dump 退出码 0 且模式行存在、插件 sha == 官方 PTC 基线 sha（`MODE-SHA` 通过）；stderr 无 incompatible/skip 标记。然后请用户在 Profile 的 agent 模式选择器里**亲眼确认**新模式出现；告知"新会话默认仍是 standard，需在 UI 里自己设一次"（本技能不覆写 registry 默认）。
+Phase A 通过判据：verify 全绿；static-check 退出码 0；dump 退出码 0 且模式行存在、插件 sha == 官方 PTC 基线 sha（`MODE-SHA` 通过）；stderr 无 incompatible/skip 标记。然后请用户**先切到该 profile**（桌面：菜单栏 `DSH NEXT → Profile：…` → 选择后 App 重启），再在 agent 模式选择器里**亲眼确认**新模式出现（预设 chip 只列当前 host 的 roster，别的 profile 下看不到属预期）；告知"新会话默认仍是 standard，需在 UI 里自己设一次"（本技能不覆写 registry 默认）。
 
 ### W6.2 Phase B：定制（每次改动一条 op）
 

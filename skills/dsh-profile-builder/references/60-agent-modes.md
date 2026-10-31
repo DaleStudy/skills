@@ -97,7 +97,7 @@
    `node scripts/mode-base.mjs emit --profile-dir $DSH_HOME/profiles/<name> --baseline .profile-builder/baseline-ptc-<mode>.yml --mode-id <profile>-<mode> --mode-name '<显示名>' --description '<描述>' --order 5 --write --json`
    - 不带 `--ops` = diff 为空；`--write` 前会先备份 patch 为 `cordis.patch.yml.bak-<epoch-ms>`。
 3. 组合校验：`node scripts/dump.mjs --profile <name> --mode <mode-id> --profile-dir $DSH_HOME/profiles/<name>` → exit 0、stderr 空、`MODE-SHA` 通过（组合后的 plugins sha == 基线 sha）。
-4. **用户 UI 亲眼确认**：选择器「自定义预设」分组出现该模式；此时新会话默认仍是 standard。
+4. **用户 UI 亲眼确认**：选择器「自定义预设」分组出现该模式；此时新会话默认仍是 standard。**前提**：桌面/浏览器必须运行在该模式所属的 profile 上——预设 chip 只读当前 host 的 roster，在 `desktop` profile 下看不到是隔离而非失败（见 30-verification A5 判据边界）。
 5. 静态校验：`node scripts/static-check.mjs --profile-dir <dir>`（模式形状 + 基线配对全部通过）。
 
 ### Phase B — 定制（每项进 ops 账本）
