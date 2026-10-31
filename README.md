@@ -294,6 +294,32 @@ TypeScript 타입 정의 및 베스트 프랙티스
 npx skills add dalestudy/skills --skill typescript
 ```
 
+---
+
+### [dsh-profile-builder](skills/dsh-profile-builder)
+
+DSH(DeepSeek Harness) profile 생성·마이그레이션·업그레이드·검증 및 커스텀 에이전트 모드(5번째 모드) 구성 가이드
+
+**주요 기능:**
+
+- 공식 템플릿(`dsh --from-default-profile web`) 기반 profile 생성
+- `cordis.patch.yml` patch 계층만으로 커스터마이징, 머신 종속 값·시크릿·생성물 검사
+- 선언 계층만으로 구성된 이식 가능한 마이그레이션 패키지 (export/import)
+- 공식 4개 모드와 나란히 배치되는 커스텀 agent preset 모드 생성·검증
+- L0 정적 / L1 `--dump-config` / L2 격리 부팅 / L3 네거티브 회귀 검증
+
+**언제 활성화되나요?**
+
+- "DSH profile 만들어줘", "profile 새로 구성해줘" 요청 시
+- profile을 다른 머신으로 옮기거나 공유/업그레이드할 때
+- profile 부팅 실패 원인 파악, 순수성 점검 시
+- 커스텀 에이전트 모드(agent-preset) 추가 시
+- `dsh profile`, `cordis.patch.yml`, `agent-preset` 키워드 포함 작업 시
+
+```bash
+npx skills add dalestudy/skills --skill dsh-profile-builder
+```
+
 ## 사용법
 
 설치 후 각 AI 도구에서 자동으로 활성화됩니다:

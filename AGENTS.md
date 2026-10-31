@@ -121,6 +121,7 @@ npx skills add dalestudy/skills --skill bun
 - **storybook**: Storybook CSF 3.0 스토리 작성
 - **testing**: React Testing Library 및 Vitest 테스팅 모범 관례
 - **typescript**: TypeScript 타입 정의 및 모범 관례
+- **dsh-profile-builder**: DSH profile 생성·마이그레이션·업그레이드·검증, 커스텀 에이전트 모드(5번째 모드)
 
 ## GitHub App 스킬 통합
 

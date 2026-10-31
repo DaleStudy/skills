@@ -1,0 +1,14 @@
+{
+  "name": "dsh-profile-valid-min",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {},
+  "dsh": {
+    "profile": {
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "@deepseek-ai/dsh-web-app"
+      ]
+    }
+  }
+}
