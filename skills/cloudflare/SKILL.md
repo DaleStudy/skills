@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires wrangler CLI
 metadata:
   author: DaleStudy
-  version: "1.2.1"
+  version: "2.0.0"
 ---
 
 # Cloudflare
@@ -77,7 +77,9 @@ jobs:
 
 ### PR 미리보기
 
-PR마다 Workers Previews(`wrangler preview --name pr-<번호>`)로 미리보기를 띄운다. 주소는 job의 `environment`로 GitHub 배포에 기록되어 PR 타임라인에 "deployed to previews"와 View deployment 버튼으로 나타난다. 댓글을 달지 않고, 오래된 미리보기는 Cloudflare가 Worker당 개수 제한에 맞춰 정리하므로 지우지 않는다.
+PR마다 Workers Previews(`wrangler preview --name pr-<번호>`)로 미리보기를 띄운다. 주소는 job의 `environment`로 GitHub 배포에 기록되어 PR 타임라인에 "deployed to preview"와 View deployment 버튼으로 나타난다. 댓글을 달지 않고, 오래된 미리보기는 Cloudflare가 Worker당 개수 제한에 맞춰 정리하므로 지우지 않는다.
+
+환경 이름은 운영 배포의 `production`과 짝을 맞춰 단수형 `preview`로 한다. wrangler-action이 Pages 배포에 쓰는 환경 이름(`production`/`preview`)과도 같다. wrangler-action에 `gitHubToken`을 넘겨 배포를 만들게 하지 않는다. 그러면 미리보기 이름(`pr-<번호>`)이 환경 이름이 되어 GitHub 환경이 PR 수만큼 쌓이고, `GITHUB_TOKEN`으로는 지울 수도 없다.
 
 ```yaml
 # .github/workflows/preview.yml
@@ -99,9 +101,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    # 미리보기 주소는 GitHub 배포(previews 환경)로 PR에 표시된다. 오래된 미리보기는 Cloudflare가 정리한다
+    # 미리보기 주소는 GitHub 배포(preview 환경)로 PR에 표시된다. 오래된 미리보기는 Cloudflare가 정리한다
     environment:
-      name: previews
+      name: preview
       url: ${{ steps.preview.outputs.preview-url }}
     steps:
       - uses: actions/checkout@v{N}
