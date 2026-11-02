@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires wrangler CLI
 metadata:
   author: DaleStudy
-  version: "2.0.0"
+  version: "2.1.0"
 ---
 
 # Cloudflare
@@ -80,6 +80,17 @@ jobs:
 PR마다 Workers Previews(`wrangler preview --name pr-<번호>`)로 미리보기를 띄운다. 주소는 job의 `environment`로 GitHub 배포에 기록되어 PR 타임라인에 "deployed to preview"와 View deployment 버튼으로 나타난다. 댓글을 달지 않고, 오래된 미리보기는 Cloudflare가 Worker당 개수 제한에 맞춰 정리하므로 지우지 않는다.
 
 환경 이름은 운영 배포의 `production`과 짝을 맞춰 단수형 `preview`로 한다. wrangler-action이 Pages 배포에 쓰는 환경 이름(`production`/`preview`)과도 같다. wrangler-action에 `gitHubToken`을 넘겨 배포를 만들게 하지 않는다. 그러면 미리보기 이름(`pr-<번호>`)이 환경 이름이 되어 GitHub 환경이 PR 수만큼 쌓이고, `GITHUB_TOKEN`으로는 지울 수도 없다.
+
+미리보기 주소는 운영 도메인의 하위 도메인 `pr-<번호>.<운영 도메인>`이다 (예: `pr-12.survey.dalestudy.com`). 미리보기 전용 도메인(`survey-preview.dalestudy.com`)이나 `workers.dev`를 따로 두지 않고, 운영 커스텀 도메인 라우트에 `previews_enabled`를 켠다. Cloudflare가 `*.<운영 도메인>` 와일드카드 DNS와 인증서를 만든다. 라우트는 `wrangler deploy` 때 반영되므로, 이 설정을 추가한 PR의 미리보기에는 아직 주소가 붙지 않는다.
+
+```jsonc
+// wrangler.jsonc
+"routes": [{ "pattern": "survey.dalestudy.com", "custom_domain": true, "previews_enabled": true }]
+```
+
+예외는 `dalestudy.com`처럼 다른 서비스의 하위 도메인(`github.`, `survey.` 등)을 함께 쓰는 apex 도메인이다. 와일드카드가 그 하위 도메인 자리를 모두 차지하므로 `workers.dev` 미리보기(`"preview_urls": true`)를 쓴다.
+
+미리보기 주소를 서버에서 확인하는 설정(Turnstile 허용 호스트, OAuth 콜백 등)은 PR마다 바뀌는 하위 도메인을 받아야 한다. Turnstile 위젯과 GitHub 앱 콜백 URL은 등록한 호스트의 하위 도메인까지 허용하므로 운영 호스트만 등록하면 된다.
 
 ```yaml
 # .github/workflows/preview.yml
