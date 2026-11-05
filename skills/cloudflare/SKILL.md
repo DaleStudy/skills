@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires wrangler CLI
 metadata:
   author: DaleStudy
-  version: "2.1.0"
+  version: "2.1.1"
 ---
 
 # Cloudflare
@@ -90,7 +90,7 @@ PR마다 Workers Previews(`wrangler preview --name pr-<번호>`)로 미리보기
 
 예외는 `dalestudy.com`처럼 다른 서비스의 하위 도메인(`github.`, `survey.` 등)을 함께 쓰는 apex 도메인이다. 와일드카드가 그 하위 도메인 자리를 모두 차지하므로 `workers.dev` 미리보기(`"preview_urls": true`)를 쓴다.
 
-미리보기 주소를 서버에서 확인하는 설정(Turnstile 허용 호스트, OAuth 콜백 등)은 PR마다 바뀌는 하위 도메인을 받아야 한다. Turnstile 위젯과 GitHub 앱 콜백 URL은 등록한 호스트의 하위 도메인까지 허용하므로 운영 호스트만 등록하면 된다.
+미리보기 주소를 서버에서 확인하는 설정(Turnstile 허용 호스트, OAuth 콜백 등)은 PR마다 바뀌는 하위 도메인을 받아야 한다. Turnstile 위젯은 등록한 호스트의 하위 도메인까지 허용하므로 운영 호스트만 등록하면 된다. GitHub 앱 콜백 URL도 운영 URL 하나만 두되, 그 URL의 **Allow wildcard matching**을 켜야 미리보기 하위 도메인에서 로그인된다.
 
 ```yaml
 # .github/workflows/preview.yml
